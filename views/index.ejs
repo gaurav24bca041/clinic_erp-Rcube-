@@ -96,7 +96,7 @@
 
     <main class="main">
 <header class="topbar">
-  <h1>Welcome, Admin</h1>
+  <h1>Welcome, <%= username %></h1>
 </header>
 
 <!-- Dashboard Cards -->
@@ -143,50 +143,7 @@
     </main>
   </div>
 
-  <script>
-  // Dummy monthly revenue data
-  const monthlyRevenue = [12000, 15000, 13000, 17000, 14500, 16000];
-  const months = ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
 
-  // Render chart
-  const ctx = document.getElementById('revenueChart').getContext('2d');
-  const revenueChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: months,
-      datasets: [{
-        label: 'Revenue (₹)',
-        data: monthlyRevenue,
-        backgroundColor: '#2f80ed'
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false }
-      },
-      scales: {
-        y: { beginAtZero: true }
-      }
-    }
-  });
-
-  // Simulate live updates (mock example)
-  setInterval(() => {
-    const rand = Math.floor(Math.random() * 5) + 1;
-    document.getElementById('appointmentCount').textContent = 8 + rand;
-    document.getElementById('newPatients').textContent = 3 + rand;
-    document.getElementById('todayRevenue').textContent = `₹${12000 + rand * 200}`;
-  }, 5000);
-
-  // Simulate filter logic
-  function filterData() {
-    const start = document.getElementById('startDate').value;
-    const end = document.getElementById('endDate').value;
-    alert(`Filtered data between ${start} and ${end} (simulation only).`);
-    // In real app: fetch data from backend with these dates
-  }
-</script>
 
 </body>
 </html>
