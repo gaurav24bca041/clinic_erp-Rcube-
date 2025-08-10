@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Patients - Clinic ERP</title>
+  <link rel="stylesheet" href="/stylesheet/styles.css?v=2">
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>🩺 Clinic ERP</h2>
+      <nav>
+        <a href="/index">Dashboard</a>
+        <a href="/patients" class="active">Patients</a>
+        <a href="/appointments">Appointments</a>
+        <a href="/billing">Billing</a>
+        <a href="/reports">Reports</a>
+        <a href="/doctor" class="active">Doctors</a>
+        <a href="/settings">Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <h1>Patients</h1>
+        <p>Welcome, <%= username %></p>
+      </header>
+
+      <section class="content">
+        <a href="/add-patient" class="btn">+ Add New Patient</a>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Gender</th>
+              <th>Visit Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (patients && patients.length > 0) { %>
+              <% patients.forEach(function(patient, index) { %>
+                <tr>
+                  <td><%= index + 1 %></td>
+                  <td><%= patient.name %></td>
+                  <td><%= patient.contact %></td>
+                  <td><%= patient.gender %></td>
+                  <td><%= new Date(patient.dob).toLocaleDateString('en-GB') %></td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="5">No patients found.</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
+
+
+

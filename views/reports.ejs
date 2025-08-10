@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reports - Clinic ERP</title>
+  <link rel="stylesheet" href="/stylesheet/styles.css?v=2">
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>🩺 Clinic ERP</h2>
+      <nav>
+        <a href="/index">Dashboard</a>
+        <a href="/patients">Patients</a>
+        <a href="/appointments">Appointments</a>
+        <a href="/billing">Billing</a>
+        <a href="/reports" class="active">Reports</a>
+        <a href="/doctor" class="active">Doctors</a>
+        <a href="/settings">Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <h1>Reports</h1>
+      </header>
+
+      <section class="dashboard">
+        <div class="card">
+          <h3>Total Patients</h3>
+          <p><%= patientsCount %></p>
+        </div>
+        <div class="card">
+          <h3>Monthly Revenue</h3>
+          <p>₹<%= monthlyRevenue %></p>
+        </div>
+        <div class="card">
+          <h3>Total Appointments</h3>
+          <p><%= appointmentsCount %></p>
+        </div>
+        <div class="card">
+          <h3>Doctors Active</h3>
+          <p><%= doctorsActive %></p>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

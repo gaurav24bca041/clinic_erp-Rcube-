@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Billing - Clinic ERP</title>
+  <link rel="stylesheet" href="/stylesheet/styles.css?v=2">
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>🩺 Clinic ERP</h2>
+      <nav>
+        <a href="/index">Dashboard</a>
+        <a href="/patients">Patients</a>
+        <a href="/appointments">Appointments</a>
+        <a href="/billing" class="active">Billing</a>
+        <a href="/reports">Reports</a>
+        <a href="/doctor">Doctors</a>
+        <a href="/settings">Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <h1>Billing</h1>
+      </header>
+
+      <section class="content">
+        <!-- Button to generate new invoice -->
+        <a href="/generate-invoice" class="btn">+ New Invoice</a>
+
+        <!-- Billing table -->
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Invoice #</th>
+              <th>Patient</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Paid Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% invoices.forEach(invoice => { %>
+              <tr>
+                    <td><%= invoice._id.toString().slice(-5).toUpperCase() %></td>
+                    <td><%= invoice.patientName %></td>
+                    <td>₹<%= invoice.amount %></td>
+                    <td><%= invoice.date.toDateString() %></td>
+                    <td>
+                        <% if (invoice.status === 'Unpaid') { %>
+                        <form action="/billing/pay/<%= invoice._id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="btn">Mark as Paid</button>
+                        </form>
+                        <% } else { %>
+                        <span style="color: green;"><%= invoice.status %></span>
+                        <% } %>
+                    </td>
+                    <td>
+                        <%= invoice.paidDate ? invoice.paidDate.toDateString() : '-' %>
+                    </td>
+              </tr>
+
+            <% }) %>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
+
+
+

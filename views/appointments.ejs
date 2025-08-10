@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Appointments - Clinic ERP</title>
+  <link rel="stylesheet" href="/stylesheet/styles.css?v=2">
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>🩺 Clinic ERP</h2>
+      <nav>
+        <a href="/index">Dashboard</a>
+        <a href="/patients">Patients</a>
+        <a href="/appointments" class="active">Appointments</a>
+        <a href="/billing">Billing</a>
+        <a href="/reports">Reports</a>
+        <a href="/doctor" class="active">Doctors</a>
+        <a href="/settings">Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <h1>Appointments</h1>
+      </header>
+
+      <section class="content">
+        <a href="/add-appointment" class="btn">+ New Appointment</a>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Patient</th>
+              <th>Doctor</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+             <% if (appointments && appointments.length > 0) { %>
+              <% appointments.forEach((appointment) => { %>
+                <tr>
+                 <td><%= appointment.time %></td>
+                 <td><%= appointment.patient %></td>
+                 <td><%= appointment.doctor %></td>
+                    <td><%= appointment.status %></td>
+                </tr>
+                  <% }) %>
+                  <% } else { %>
+                <tr>
+                 <td colspan="4">No appointments found.</td>
+                </tr>
+                 <% } %>
+           </tbody>
+
+        </table>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

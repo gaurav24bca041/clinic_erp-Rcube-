@@ -1,0 +1,55 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Generate Invoice - Clinic ERP</title>
+  <link rel="stylesheet" href="/stylesheet/styles.css?v=2">
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>🩺 Clinic ERP</h2>
+      <nav>
+        <a href="/index">Dashboard</a>
+        <a href="/patients">Patients</a>
+        <a href="/appointments">Appointments</a>
+        <a href="/billing" class="active">Billing</a>
+        <a href="/reports">Reports</a>
+        <a href="/doctor" class="active">Doctors</a>
+        <a href="/settings">Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <h1>Generate Invoice</h1>
+      </header>
+
+      <section class="content">
+        <form class="form" action="/generate-invoice" method="post">
+            <label>Patient Name</label>
+            <input type="text" name="patientName" required />
+
+            <label>Services</label>
+            <input type="text" name="services" placeholder="e.g., Consultation, X-ray" required />
+
+            <label>Amount (₹)</label>
+            <input type="number" name="amount" required />
+
+            <label>Status</label>
+            <select name="status">
+                <option>Paid</option>
+                <option>Unpaid</option>
+            </select>
+
+            <label>Invoice Date</label>
+            <input type="date" name="date" value="2025-07-04" />
+
+            <button type="submit" class="btn">Generate Invoice</button>
+        </form>
+
+      </section>
+    </main>
+  </div>
+</body>
+</html>

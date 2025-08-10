@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Settings - Clinic ERP</title>
+  <link rel="stylesheet" href="/stylesheet/styles.css?v=2">
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>🩺 Clinic ERP</h2>
+      <nav>
+        <a href="/index">Dashboard</a>
+        <a href="/patients">Patients</a>
+        <a href="/appointments">Appointments</a>
+        <a href="/billing" class="active">Billing</a>
+        <a href="/reports">Reports</a>
+        <a href="/doctor" class="active">Doctors</a>
+        <a href="/settings">Settings</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <h1>Settings</h1>
+      </header>
+
+      <section class="content">
+        <form class="form">
+          <h3>Clinic Details</h3>
+          <label>Clinic Name</label>
+          <input type="text" value="SmileCare Clinic" />
+
+          <label>Address</label>
+          <input type="text" value="123 Health Street, Noida" />
+
+          <label>Contact Email</label>
+          <input type="email" value="clinic@example.com" />
+
+          <hr />
+
+          <h3>Change Password</h3>
+          <label>Current Password</label>
+          <input type="password" />
+
+          <label>New Password</label>
+          <input type="password" />
+
+          <label>Confirm New Password</label>
+          <input type="password" />
+
+          <button type="submit" class="btn">Save Changes</button>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
