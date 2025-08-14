@@ -35,6 +35,7 @@
               <th>Patient</th>
               <th>Doctor</th>
               <th>Status</th>
+              <th>Date</th>
             </tr>
           </thead>
           <tbody>
@@ -44,7 +45,8 @@
                  <td><%= appointment.time %></td>
                  <td><%= appointment.patient %></td>
                  <td><%= appointment.doctor %></td>
-                    <td><%= appointment.status %></td>
+                <td><%= appointment.status %></td>
+                <td><%= appointment.date.toLocaleString() %></td>
                 </tr>
                   <% }) %>
                   <% } else { %>

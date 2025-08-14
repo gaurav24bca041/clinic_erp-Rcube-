@@ -15,13 +15,22 @@ exports.getAddAppointment = (req, res) => {
 };
 
 exports.postAddAppointment = async (req, res) => {
-  const { patient, doctor, time, status } = req.body;
   try {
-    await Appointment.create({ patient, doctor, time, status });
+    // Combine date + time into one Date object
+    const appointmentDateTime = new Date(`${req.body.date}T${req.body.time}`);
+
+    await Appointment.create({
+      patient: req.body.patient,
+      doctor: req.body.doctor,
+      date: appointmentDateTime, // Proper Date object
+      time: req.body.time, // Keep time string if you want
+      status: req.body.status,
+      reason: req.body.reason
+    });
+
     res.redirect('/appointments');
   } catch (err) {
     console.error(err);
-    res.send('Error saving appointment.');
+    res.status(500).send("Error adding appointment");
   }
 };
-

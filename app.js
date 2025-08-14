@@ -24,16 +24,16 @@ mongoose.connect('mongodb://127.0.0.1:27017/clinicDB')
 
 app.use('/', require('./routes/authRoutes'));
 app.use('/', require('./routes/dashboardRoutes'));
-app.use('/patients', require('./routes/patientRoutes'));
-app.use('/appointments', require('./routes/appointmentRoutes'));
+// app.use('/patients', require('./routes/patientRoutes'));
+app.use('/', require('./routes/appointmentRoutes'));
 app.use('/billing', require('./routes/billingRoutes'));
 app.use('/reports', require('./routes/reportRoutes'));
 app.use('/doctor', require('./routes/doctorRoutes'));
 app.use('/settings', require('./routes/settingsRoutes'));
 
 const patientRoutes = require('./routes/patientRoutes');
-app.use('/patients', patientRoutes);
-
+app.use('/', patientRoutes);
+ 
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });
