@@ -18,7 +18,7 @@ app.use(expressSession({
   cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }));
 
-mongoose.connect('mongodb://127.0.0.1:27017/clinicDB')
+mongoose.connect('mongodb+srv://gk505305shah:2aS21gv7bSA2ZClT@cluster0.eu1qorw.mongodb.net/')
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.log(err));
 

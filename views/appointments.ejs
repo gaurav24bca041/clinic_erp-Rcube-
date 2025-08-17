@@ -42,11 +42,11 @@
              <% if (appointments && appointments.length > 0) { %>
               <% appointments.forEach((appointment) => { %>
                 <tr>
-                 <td><%= appointment.time %></td>
-                 <td><%= appointment.patient %></td>
-                 <td><%= appointment.doctor %></td>
-                <td><%= appointment.status %></td>
-                <td><%= appointment.date.toLocaleString() %></td>
+                 <td><%= appointment?.time %></td>
+                 <td><%= appointment?.patient %></td>
+                 <td><%= appointment?.doctor %></td>
+                <td><%= appointment?.status %></td>
+                <td><%= appointment?.date?.toLocaleString() %></td>
                 </tr>
                   <% }) %>
                   <% } else { %>
