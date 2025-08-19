@@ -18,9 +18,8 @@ app.use(expressSession({
   cookie: { maxAge: 1000 * 60 * 60 * 24 }
 }));
 
-mongoose.connect('mongodb+srv://gk505305shah:2aS21gv7bSA2ZClT@cluster0.eu1qorw.mongodb.net/')
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.log(err));
+mongoose.connect("mongodb+srv://gk505305shah:sb2soklUvc7To9Sy@clinicerpdb.lhg2z2d.mongodb.net/?retryWrites=true&w=majority&appName=clinicerpdb")
+  
 
 app.use('/', require('./routes/authRoutes'));
 app.use('/', require('./routes/dashboardRoutes'));
