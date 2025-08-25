@@ -4,7 +4,7 @@ const appointmentSchema = new mongoose.Schema({
   patient: { type: String, ref: 'Patients', required: true },
   doctor: { type: String, ref: 'Doctor', required: true },
   date: { type: Date, required: true },
-  time: String,
+  time: { type: String, required: true }, // Store time as string "HH:MM"
   reason: String,
   status: { type: String, default: 'scheduled' } // e.g. scheduled, completed, cancelled
 }, { timestamps: true });

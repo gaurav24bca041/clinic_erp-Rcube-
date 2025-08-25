@@ -27,6 +27,27 @@ exports.postAddAppointment = async (req, res) => {
       status: req.body.status,
       reason: req.body.reason
     });
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    // Aaj ka end (11:59:59 PM)
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    // ✅ Aaj ke appointments count
+    const todayAppointmentsCount = await Appointment.countDocuments({
+      date: { $gte: startOfDay, $lte: endOfDay }
+    });
+
+    // ✅ Aaj ke appointments list
+    const todayAppointments = await Appointment.find({
+      date: { $gte: startOfDay, $lte: endOfDay }
+    }).sort({ date: 1 });
+
+    res.render('index', {
+      appointmentCount: todayAppointmentsCount,
+      todayAppointments: todayAppointments
+    });
 
     res.redirect('/appointments');
   } catch (err) {

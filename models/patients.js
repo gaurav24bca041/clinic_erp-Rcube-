@@ -6,6 +6,8 @@ const patientSchema = new mongoose.Schema({
   gender: String,
   dob: Date,
   history: String,
+  date: { type: Date, default: Date.now }
+
 }, { timestamps: true });
 
 module.exports = mongoose.models.Patient || mongoose.model('Patient', patientSchema);

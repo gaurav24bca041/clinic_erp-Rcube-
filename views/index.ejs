@@ -9,7 +9,7 @@
 
   <style>
     body {
-      font-family: Arial, sans-serif;
+      
       background: #f4f6f9;
       margin: 0;
     }
@@ -18,31 +18,7 @@
       display: flex;
     }
 
-    /* Sidebar */
-    .sidebar {
-      width: 220px;
-      background: #2f3e46;
-      color: white;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .sidebar h2 {
-      margin-bottom: 20px;
-    }
-    .sidebar nav a {
-      display: block;
-      padding: 10px;
-      color: #ddd;
-      text-decoration: none;
-      border-radius: 8px;
-      margin-bottom: 5px;
-      transition: background 0.2s;
-    }
-    .sidebar nav a:hover,
-    .sidebar nav a.active {
-      background: #1b262c;
-      color: white;
-    }
+ 
 
     /* Main Content */
     .main {
@@ -144,13 +120,21 @@
       <!-- Dashboard Cards -->
       <section class="dashboard">
         <a href="/appointments" class="card">
-          <h3><span class="material-symbols-outlined">calendar_today</span>Today's Appointments</h3>
-          <div class="value" id="appointmentCount">8</div>
+          <h3>
+            <span class="material-symbols-outlined">calendar_today</span>
+            Today's Appointments
+          </h3>
+          <div class="value" id="appointmentCount"><%= todayAppointments %></div>
         </a>
+
         <a href="/patients" class="card">
-          <h3><span class="material-symbols-outlined">group</span>New Patients</h3>
-          <div class="value" id="newPatients">3</div>
+          <h3>
+            <span class="material-symbols-outlined">groups</span>
+            New Patients Today
+          </h3>
+          <div class="value" id="patientCount">8</div>
         </a>
+
         <a href="/billing" class="card">
           <h3><span class="material-symbols-outlined">payments</span>Total Revenue</h3>
           <div class="value">₹<%= totalRevenue %></div>
