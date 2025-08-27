@@ -11,14 +11,14 @@ exports.getReports = async (req, res) => {
 
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
 
     const invoices = await Invoice.find({
       date: { $gte: startOfMonth, $lte: endOfMonth },
-      status: 'paid'
+      status: { $regex: /^paid$/i }
     });
 
-    const monthlyRevenue = invoices.reduce((sum, inv) => sum + inv.amount, 0);
+    const monthlyRevenue = invoices.reduce((sum, inv) => sum + (inv.amount || 0), 0);
 
     res.render('reports', {
       patientsCount,
