@@ -31,7 +31,8 @@ router.get('/index', async (req, res) => {
     });
 
     // ✅ Active doctors count
-    const activeDoctors = await Doctor.countDocuments({ active: true });
+    const doctorsActive = await Doctor.countDocuments({ isActive: true });
+
 
     // ✅ Render dashboard
     res.render('index', {
@@ -39,7 +40,7 @@ router.get('/index', async (req, res) => {
       totalRevenue: totalRevenue.length > 0 ? totalRevenue[0].total : 0,
       todayAppointments,
       newPatients,
-      activeDoctors
+      doctorsActive,
     });
 
   } catch (err) {
