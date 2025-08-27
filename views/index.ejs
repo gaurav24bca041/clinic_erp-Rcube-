@@ -132,8 +132,9 @@
             <span class="material-symbols-outlined">groups</span>
             New Patients Today
           </h3>
-          <div class="value" id="patientCount">8</div>
+          <div class="value" id="patientCount"><%= newPatients %></div>  <!-- ✅ dynamic -->
         </a>
+
 
         <a href="/billing" class="card">
           <h3><span class="material-symbols-outlined">payments</span>Total Revenue</h3>
@@ -142,7 +143,7 @@
 
         <a href="/doctor" class="card">
           <h3><span class="material-symbols-outlined">person</span>Active Doctors</h3>
-          <div class="value">3</div>
+          <div class="value"></div>
         </a>
       </section>
 

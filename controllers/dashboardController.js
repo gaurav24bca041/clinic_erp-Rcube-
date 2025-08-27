@@ -8,7 +8,11 @@ exports.getDashboard = async (req, res) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const patientsCount = await Patient.countDocuments();
+    const newPatients = await Patient.countDocuments({
+      date: { $gte: startOfDay, $lte: endOfDay }
+    });
+
+    
     const appointmentsToday = await Appointment.countDocuments({ date: { $gte: today } });
     const doctorsActive = await Doctor.countDocuments({ isActive: true });
 
@@ -24,7 +28,7 @@ exports.getDashboard = async (req, res) => {
 
     res.render('index', {
       appointmentsToday,
-      patientsCount,
+      newPatients,
       doctorsActive,
       totalRevenue,
       username: req.session.user
@@ -33,7 +37,7 @@ exports.getDashboard = async (req, res) => {
     console.error('Error loading dashboard:', err);
     res.render('index', {
       appointmentsToday: 0,
-      patientsCount: 0,
+      newPatients: 0,
       doctorsActive: 0,
       totalRevenue: 0,
       username: req.session.user
