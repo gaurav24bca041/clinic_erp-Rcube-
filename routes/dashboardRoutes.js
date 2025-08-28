@@ -41,6 +41,7 @@ router.get('/index', async (req, res) => {
       todayAppointments,
       newPatients,
       doctorsActive,
+      revenueData: JSON.stringify([]) // Placeholder for revenue data
     });
 
   } catch (err) {

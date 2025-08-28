@@ -161,57 +161,72 @@
   </div>
 
   <script>
-    // Dummy chart data
-    let revenueData = [
-      { date: "2025-08-01", revenue: 10000 },
-      { date: "2025-08-02", revenue: 12000 },
-      { date: "2025-08-03", revenue: 8000 },
-      { date: "2025-08-04", revenue: 15000 },
-      { date: "2025-08-05", revenue: 9000 },
-      { date: "2025-08-06", revenue: 13000 },
-      { date: "2025-08-07", revenue: 11000 }
-    ];
+    // Parse revenue data passed from server
+    const revenueData = <%- revenueData %>;
+    // Prepare data for Chart.js
+    const labels = revenueData.map(item => item.date);
+    const data = revenueData.map(item => item.revenue);
 
-    let ctx = document.getElementById("revenueChart").getContext("2d");
-    let chart = new Chart(ctx, {
-      type: "line",
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    const revenueChart = new Chart(ctx, {
+      type: 'line',
       data: {
-        labels: revenueData.map(d => d.date),
+        labels: labels,
         datasets: [{
-          label: "Revenue (₹)",
-          data: revenueData.map(d => d.revenue),
-          borderColor: "#2f80ed",
-          backgroundColor: "rgba(47, 128, 237, 0.1)",
-          borderWidth: 2,
-          tension: 0.3,
+          label: 'Revenue',
+          data: data,
+          borderColor: '#2f80ed',
+          backgroundColor: 'rgba(47, 128, 237, 0.1)',
           fill: true,
+          tension: 0.3,
           pointRadius: 5,
-          pointBackgroundColor: "#2f80ed"
+          pointHoverRadius: 7
         }]
       },
       options: {
         responsive: true,
         plugins: {
-          legend: { display: true }
+          legend: {
+            display: true,
+            position: 'top'
+          }
         },
         scales: {
-          y: { beginAtZero: true }
+          x: {
+            title: {
+              display: true,
+              text: 'Date'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Revenue (₹)'
+            },
+            beginAtZero: true
+          }
         }
       }
     });
 
-    // Filter chart data
+    // Filter data based on date range
     function filterData() {
-      let start = document.getElementById("startDate").value;
-      let end = document.getElementById("endDate").value;
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
 
-      let filtered = revenueData.filter(d => {
-        return (!start || d.date >= start) && (!end || d.date <= end);
+      if (!startDate || !endDate) {
+        alert('Please select both start and end dates.');
+        return;
+      }
+
+      const filteredData = revenueData.filter(item => {
+        return item.date >= startDate && item.date <= endDate;
       });
 
-      chart.data.labels = filtered.map(d => d.date);
-      chart.data.datasets[0].data = filtered.map(d => d.revenue);
-      chart.update();
+      // Update chart with filtered data
+      revenueChart.data.labels = filteredData.map(item => item.date);
+      revenueChart.data.datasets[0].data = filteredData.map(item => item.revenue);
+      revenueChart.update();
     }
   </script>
 </body>

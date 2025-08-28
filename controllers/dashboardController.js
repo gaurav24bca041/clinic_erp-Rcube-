@@ -18,6 +18,27 @@ exports.getDashboard = async (req, res) => {
 
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999);
+    // ✅ Daily revenue aggregation
+    const dailyRevenue = await Invoice.aggregate([
+      {
+        $match: {
+          date: { $gte: startOfMonth, $lte: endOfMonth },
+          status: { $regex: /^paid$/i }
+        }
+      },
+      {
+        $group: {
+          _id: { $dayOfMonth: "$date" },
+          total: { $sum: "$amount" }
+        }
+      },
+      { $sort: { "_id": 1 } }
+    ]);
+    // Convert into array of objects {date, revenue}
+    const revenueData = dailyRevenue.map(r => ({
+      date: `${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2,"0")}-${r._id.toString().padStart(2,"0")}`,
+      revenue: r.total
+    }));
 
     const invoices = await Invoice.find({
       date: { $gte: startOfMonth, $lte: endOfMonth },
@@ -31,6 +52,7 @@ exports.getDashboard = async (req, res) => {
       newPatients,
       doctorsActive,
       totalRevenue,
+      revenueData: JSON.stringify(revenueData),
       username: req.session.user
     });
   } catch (err) {
@@ -40,6 +62,7 @@ exports.getDashboard = async (req, res) => {
       newPatients: 0,
       doctorsActive: 0,
       totalRevenue: 0,
+      revenueData: JSON.stringify([]),
       username: req.session.user
     });
   }
