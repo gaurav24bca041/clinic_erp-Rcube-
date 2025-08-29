@@ -46,7 +46,7 @@ exports.getDashboard = async (req, res) => {
     });
 
     const totalRevenue = invoices.reduce((sum, inv) => sum + inv.amount, 0);
-
+    
     res.render('index', {
       appointmentsToday,
       newPatients,

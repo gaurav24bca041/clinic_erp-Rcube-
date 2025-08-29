@@ -161,74 +161,38 @@
   </div>
 
   <script>
-    // Parse revenue data passed from server
-    const revenueData = <%- revenueData %>;
-    // Prepare data for Chart.js
-    const labels = revenueData.map(item => item.date);
-    const data = revenueData.map(item => item.revenue);
+  // Server se safe JS me revenueData inject karna
+  let revenueData = JSON.parse('<%- JSON.stringify(revenueData) %>');
 
-    const ctx = document.getElementById('revenueChart').getContext('2d');
-    const revenueChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Revenue',
-          data: data,
-          borderColor: '#2f80ed',
-          backgroundColor: 'rgba(47, 128, 237, 0.1)',
-          fill: true,
-          tension: 0.3,
-          pointRadius: 5,
-          pointHoverRadius: 7
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true,
-            position: 'top'
-          }
-        },
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: 'Date'
-            }
-          },
-          y: {
-            title: {
-              display: true,
-              text: 'Revenue (₹)'
-            },
-            beginAtZero: true
-          }
-        }
+  // Prepare data for Chart.js
+  const labels = revenueData.map(item => item.date);
+  const data = revenueData.map(item => item.revenue);
+
+  const ctx = document.getElementById('revenueChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Revenue',
+        data: data,
+        borderColor: '#2f80ed',
+        backgroundColor: 'rgba(47, 128, 237, 0.1)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 5,
+        pointHoverRadius: 7
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true }
       }
-    });
-
-    // Filter data based on date range
-    function filterData() {
-      const startDate = document.getElementById('startDate').value;
-      const endDate = document.getElementById('endDate').value;
-
-      if (!startDate || !endDate) {
-        alert('Please select both start and end dates.');
-        return;
-      }
-
-      const filteredData = revenueData.filter(item => {
-        return item.date >= startDate && item.date <= endDate;
-      });
-
-      // Update chart with filtered data
-      revenueChart.data.labels = filteredData.map(item => item.date);
-      revenueChart.data.datasets[0].data = filteredData.map(item => item.revenue);
-      revenueChart.update();
     }
-  </script>
+  });
+</script>
+
 </body>
 </html>
 
