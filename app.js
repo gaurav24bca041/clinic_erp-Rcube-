@@ -33,8 +33,8 @@ app.use('/settings', require('./routes/settingsRoutes'));
 const patientRoutes = require('./routes/patientRoutes');
 app.use('/', patientRoutes);
 
- 
-
+const forgetPasswordRoutes = require("./routes/forgetPasswordRoutes");
+app.use("/", forgetPasswordRoutes);
 
  
 app.listen(3000, () => {
