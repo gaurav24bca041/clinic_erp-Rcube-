@@ -20,8 +20,12 @@
       background-size: 300% 300%;
       animation: gradientBG 8s ease infinite;
     }
-    
-    .login-box {
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .register-box {
       background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(15px);
       padding: 40px 35px;
@@ -36,7 +40,7 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .login-box h2 {
+    .register-box h2 {
       text-align: center;
       margin-bottom: 28px;
       font-weight: 600;
@@ -45,7 +49,7 @@
       position: relative;
       margin: 12px 0;
     }
-    .login-box input {
+    .register-box input {
       width: 100%;
       padding: 14px 40px 14px 14px;
       border: none;
@@ -56,10 +60,10 @@
       color: white;
       transition: all 0.3s ease;
     }
-    .login-box input::placeholder {
+    .register-box input::placeholder {
       color: rgba(255, 255, 255, 0.7);
     }
-    .login-box input:focus {
+    .register-box input:focus {
       background: rgba(255, 255, 255, 0.35);
       box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
     }
@@ -72,10 +76,10 @@
       color: rgba(255, 255, 255, 0.7);
       font-size: 18px;
     }
-    .login-box button {
+    .register-box button {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(135deg, #ff6a88, #ff99ac);
+      background: linear-gradient(135deg, #36d1dc, #5b86e5);
       color: white;
       border: none;
       border-radius: 10px;
@@ -85,10 +89,10 @@
       margin-top: 16px;
       transition: all 0.3s ease;
     }
-    .login-box button:hover {
-      background: linear-gradient(135deg, #ff4e72, #ff7f9e);
+    .register-box button:hover {
+      background: linear-gradient(135deg, #2193b0, #6dd5ed);
       transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(255, 105, 135, 0.4);
+      box-shadow: 0 6px 12px rgba(91, 134, 229, 0.4);
     }
     .error {
       color: #ffcccc;
@@ -96,12 +100,25 @@
       font-size: 14px;
       margin-top: 5px;
     }
+    .extra-link {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    .extra-link a {
+      color: #fff;
+      text-decoration: underline;
+      transition: color 0.3s;
+    }
+    .extra-link a:hover {
+      color: #d1ecf1;
+    }
   </style>
 </head>
 <body>
 
-  <div class="login-box">
-    <h2>Register</h2>
+  <div class="register-box">
+    <h2>Create Account</h2>
     <form action="/register" method="POST" id="registerForm">
       <div class="input-group">
         <input type="text" id="username" name="username" placeholder="Username" required />
@@ -116,6 +133,7 @@
       </div>
       <button type="submit">Register</button>
       <p class="error" id="errorMsg"></p>
+      <p class="extra-link">Already have an account? <a href="/">Login</a></p>
     </form>
   </div>
 
