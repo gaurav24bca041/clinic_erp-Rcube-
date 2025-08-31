@@ -5,71 +5,48 @@
   <title>Doctors - Clinic ERP</title>
   <link rel="stylesheet" href="/stylesheet/styles.css?v=2">
   <style>
-    /* =======================
-   RESET & BASE
-======================= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f6f9fc;
-  color: #333;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-/* =======================
-   LAYOUT
-======================= */
-.container {
-  display: flex;
-  min-height: 100vh;
-}
-
-
-
-
-
-/* Main */
-.main {
+    .main {
   flex: 1;
   display: flex;
   flex-direction: column;
+  background: #f6f9fc;
 }
 
 /* Topbar */
 .topbar {
   background: #fff;
-  padding: 15px 20px;
+  padding: 15px 25px;
   border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .topbar h1 {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #2f3e46;
 }
 
 /* =======================
    CONTENT
 ======================= */
 .content {
-  padding: 20px;
+  padding: 25px;
 }
 
 .content h2 {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+  font-weight: 600;
   color: #2f3e46;
 }
 
 .content h3 {
-  margin-top: 30px;
-  margin-bottom: 10px;
+  margin-top: 35px;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  font-weight: 600;
   color: #2f3e46;
 }
 
@@ -80,9 +57,10 @@ table {
   width: 100%;
   border-collapse: collapse;
   background: #fff;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 thead {
@@ -91,17 +69,21 @@ thead {
 }
 
 thead th {
-  padding: 12px;
+  padding: 14px;
   text-align: left;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
 }
 
 tbody td {
-  padding: 12px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 14px;
+  border-bottom: 1px solid #eaeaea;
+  font-size: 0.95rem;
 }
 
 tbody tr:hover {
   background: #f1faff;
+  transition: background 0.3s;
 }
 
 /* =======================
@@ -109,44 +91,57 @@ tbody tr:hover {
 ======================= */
 form {
   background: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  max-width: 500px;
 }
 
-form input[type="text"] {
+form input[type="text"],
+form input[type="email"],
+form input[type="number"] {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
   border: 1px solid #ccc;
   border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+form input:focus {
+  outline: none;
+  border-color: #4cafef;
+  box-shadow: 0 0 5px rgba(76, 175, 239, 0.3);
 }
 
 form label {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   font-size: 0.95rem;
+  color: #444;
 }
 
 form label input {
-  margin-right: 6px;
+  margin-right: 8px;
 }
 
 form button {
-  padding: 10px 20px;
+  padding: 12px 20px;
   background: #4cafef;
   color: #fff;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
+  font-weight: 600;
+  transition: background 0.3s;
 }
 
 form button:hover {
   background: #399edd;
 }
-
   </style>
 </head>
 <body>
@@ -176,6 +171,9 @@ form button:hover {
             <tr>
               <th>Name</th>
               <th>Specialization</th>
+              <th>Contact</th>
+              <th>Email</th>
+              <th>Consultancy Fee</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -184,6 +182,9 @@ form button:hover {
               <tr>
                 <td><%= doctor.name %></td>
                 <td><%= doctor.specialization %></td>
+                <td><%= doctor.contact %></td>
+                <td><%= doctor.email %></td>
+                <td>₹ <%= doctor.fee %></td>
                 <td><%= doctor.isActive ? 'Active' : 'Inactive' %></td>
               </tr>
             <% }) %>
@@ -194,6 +195,9 @@ form button:hover {
         <form action="/doctor" method="POST">
           <input type="text" name="name" placeholder="Doctor Name" required>
           <input type="text" name="specialization" placeholder="Specialization" required>
+          <input type="text" name="contact" placeholder="Contact Number" required>
+          <input type="email" name="email" placeholder="Email Address" required>
+          <input type="number" name="fee" placeholder="Consultancy Fee (₹)" required>
           <label>
             <input type="checkbox" name="isActive" checked> Active
           </label>
