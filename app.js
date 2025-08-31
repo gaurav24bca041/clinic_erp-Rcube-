@@ -28,7 +28,9 @@ app.use('/', require('./routes/appointmentRoutes'));
 app.use('/billing', require('./routes/billingRoutes'));
 app.use('/reports', require('./routes/reportRoutes'));
 app.use('/doctor', require('./routes/doctorRoutes'));
-app.use('/settings', require('./routes/settingsRoutes'));
+const settingsRoutes = require("./routes/settingsRoutes");
+app.use("/settings", settingsRoutes);
+
 
 const patientRoutes = require('./routes/patientRoutes');
 app.use('/', patientRoutes);
