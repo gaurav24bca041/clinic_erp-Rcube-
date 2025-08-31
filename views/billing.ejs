@@ -37,7 +37,8 @@
               <th>Patient</th>
               <th>Amount</th>
               <th>Date</th>
-              <th>Paid Date</th>
+              <th>Status</th>
+              <th>Servies</th>
             </tr>
           </thead>
           <tbody>
@@ -56,9 +57,7 @@
                         <span style="color: green;"><%= invoice.status %></span>
                         <% } %>
                     </td>
-                    <td>
-                        <%= invoice.paidDate ? invoice.paidDate.toDateString() : '-' %>
-                    </td>
+                    <td><%= invoice.services %></td>
               </tr>
 
             <% }) %>
