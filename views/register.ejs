@@ -20,11 +20,7 @@
       background-size: 300% 300%;
       animation: gradientBG 8s ease infinite;
     }
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+    
     .register-box {
       background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(15px);
@@ -136,25 +132,29 @@
       <p class="extra-link">Already have an account? <a href="/">Login</a></p>
     </form>
   </div>
-
   <script>
-    function toggleVisibility(id) {
-      const field = document.getElementById(id);
-      field.type = field.type === "password" ? "text" : "password";
+    function toggleVisibility(fieldId) {
+      const field = document.getElementById(fieldId);
+      if (field.type === "password") {
+        field.type = "text";
+      } else {
+        field.type = "password";
+      }
     }
 
-    document.getElementById('registerForm').addEventListener('submit', function(e) {
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
       const errorMsg = document.getElementById('errorMsg');
 
       if (password !== confirmPassword) {
-        e.preventDefault();
-        errorMsg.textContent = "Passwords do not match!";
+        event.preventDefault();
+        errorMsg.textContent = "Passwords do not match.";
       } else {
         errorMsg.textContent = "";
       }
     });
   </script>
+  
 </body>
 </html>
