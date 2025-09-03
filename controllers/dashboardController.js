@@ -5,24 +5,48 @@ const Doctor = require("../models/doctor");
 
 exports.getDashboard = async (req, res) => {
   try {
-    // --- Aaj ki date ---
+    // --- Today ---
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
 
     const endOfDay = new Date();
     endOfDay.setHours(23, 59, 59, 999);
 
-    // --- Current Month start & end ---
-    const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-    const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+    // --- Current Month ---
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
-    // ✅ Monthly Revenue
+    // ✅ Monthly Revenue (Total only)
     const invoices = await Invoice.find({
       date: { $gte: startOfMonth, $lte: endOfMonth },
       status: { $regex: /^paid$/i }
     });
 
     const monthlyRevenue = invoices.reduce((sum, inv) => sum + inv.amount, 0);
+
+    // ✅ Daily Revenue (for chart)
+    const revenueAgg = await Invoice.aggregate([
+      {
+        $match: {
+          date: { $gte: startOfMonth, $lte: endOfMonth },
+          status: { $regex: /^paid$/i }
+        }
+      },
+      {
+        $group: {
+          _id: { $dayOfMonth: "$date" },
+          total: { $sum: "$amount" }
+        }
+      },
+      { $sort: { "_id": 1 } }
+    ]);
+
+    // Convert for frontend
+    const revenueData = revenueAgg.map(item => ({
+      date: `${item._id} ${now.toLocaleString("default", { month: "short" })}`,
+      revenue: item.total
+    }));
 
     // ✅ Today’s Appointments
     const todayAppointments = await Appointment.countDocuments({
@@ -37,14 +61,14 @@ exports.getDashboard = async (req, res) => {
     // ✅ Active Doctors
     const doctorsActive = await Doctor.countDocuments({ isActive: true });
 
-    // ✅ Render dashboard
+    // ✅ Render
     res.render("index", {
       username: req.session.username || "User",
       monthlyRevenue,
       todayAppointments,
       newPatients,
       doctorsActive,
-      revenueData: JSON.stringify([]) // later chart ke liye
+      revenueData
     });
 
   } catch (err) {
@@ -55,7 +79,9 @@ exports.getDashboard = async (req, res) => {
       todayAppointments: 0,
       newPatients: 0,
       doctorsActive: 0,
-      revenueData: JSON.stringify([])
+      revenueData: []
     });
   }
 };
+
+
