@@ -45,13 +45,13 @@ exports.getDashboard = async (req, res) => {
       status: { $regex: /^paid$/i }
     });
 
-    const totalRevenue = invoices.reduce((sum, inv) => sum + inv.amount, 0);
+    const monthlyRevenue = invoices.reduce((sum, inv) => sum + inv.amount, 0);
     
     res.render('index', {
       appointmentsToday,
       newPatients,
       doctorsActive,
-      totalRevenue,
+      monthlyRevenue,
       revenueData: JSON.stringify(revenueData),
       username: req.session.user
     });
@@ -61,7 +61,7 @@ exports.getDashboard = async (req, res) => {
       appointmentsToday: 0,
       newPatients: 0,
       doctorsActive: 0,
-      totalRevenue: 0,
+      monthlyRevenue: 0,
       revenueData: JSON.stringify([]),
       username: req.session.user
     });

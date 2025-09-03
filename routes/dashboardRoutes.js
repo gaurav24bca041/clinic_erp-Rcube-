@@ -37,7 +37,7 @@ router.get('/index', async (req, res) => {
     // ✅ Render dashboard
     res.render('index', {
       username: req.session.username || 'User',
-      totalRevenue: totalRevenue.length > 0 ? totalRevenue[0].total : 0,
+      monthlyRevenue: totalRevenue.length > 0 ? totalRevenue[0].total : 0,
       todayAppointments,
       newPatients,
       doctorsActive,
