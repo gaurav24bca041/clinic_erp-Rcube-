@@ -15,10 +15,29 @@ router.get('/index', async (req, res) => {
     const endOfDay = new Date();
     endOfDay.setHours(23, 59, 59, 999);
 
-    // ✅ Total Revenue
-    const totalRevenue = await invoices.aggregate([
-      { $group: { _id: null, total: { $sum: "$amount" } } }
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    const endOfMonth = new Date(startOfMonth.getFullYear(), startOfMonth.getMonth() + 1, 0, 23, 59, 59, 999);
+
+    const monthlyRevenueAgg = await invoices.aggregate([
+    {
+        $match: {
+        date: { $gte: startOfMonth, $lte: endOfMonth }, // Only this month
+        status: { $regex: /^paid$/i } // Optional: Only paid invoices
+        }
+    },
+    {
+        $group: {
+        _id: null,
+        total: { $sum: "$amount" }
+        }
+    }
     ]);
+
+    const monthlyRevenue = monthlyRevenueAgg.length > 0 ? monthlyRevenueAgg[0].total : 0;
+
 
     // ✅ Aaj ke appointments count
     const todayAppointments = await Appointment.countDocuments({
@@ -37,7 +56,7 @@ router.get('/index', async (req, res) => {
     // ✅ Render dashboard
     res.render('index', {
       username: req.session.username || 'User',
-      monthlyRevenue: totalRevenue.length > 0 ? totalRevenue[0].total : 0,
+      monthlyRevenue: monthlyRevenueAgg.length > 0 ? monthlyRevenueAgg[0].total : 0,
       todayAppointments,
       newPatients,
       doctorsActive,
