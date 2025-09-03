@@ -1,69 +1,61 @@
-const Patient = require('../models/patients');
-const Appointment = require('../models/appointment');
-const Doctor = require('../models/doctor');
-const Invoice = require('../models/invoices');
+const Invoice = require("../models/invoices");
+const Appointment = require("../models/appointment");
+const Patient = require("../models/patients");
+const Doctor = require("../models/doctor");
 
 exports.getDashboard = async (req, res) => {
   try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    // --- Aaj ki date ---
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
 
-    const newPatients = await Patient.countDocuments({
-      date: { $gte: startOfDay, $lte: endOfDay }
-    });
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
 
-    
-    const appointmentsToday = await Appointment.countDocuments({ date: { $gte: today } });
-    const doctorsActive = await Doctor.countDocuments({ isActive: true });
+    // --- Current Month start & end ---
+    const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999);
-    // ✅ Daily revenue aggregation
-    const dailyRevenue = await Invoice.aggregate([
-      {
-        $match: {
-          date: { $gte: startOfMonth, $lte: endOfMonth },
-          status: { $regex: /^paid$/i }
-        }
-      },
-      {
-        $group: {
-          _id: { $dayOfMonth: "$date" },
-          total: { $sum: "$amount" }
-        }
-      },
-      { $sort: { "_id": 1 } }
-    ]);
-    // Convert into array of objects {date, revenue}
-    const revenueData = dailyRevenue.map(r => ({
-      date: `${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2,"0")}-${r._id.toString().padStart(2,"0")}`,
-      revenue: r.total
-    }));
-
+    // ✅ Monthly Revenue
     const invoices = await Invoice.find({
       date: { $gte: startOfMonth, $lte: endOfMonth },
       status: { $regex: /^paid$/i }
     });
 
     const monthlyRevenue = invoices.reduce((sum, inv) => sum + inv.amount, 0);
-    
-    res.render('index', {
-      appointmentsToday,
+
+    // ✅ Today’s Appointments
+    const todayAppointments = await Appointment.countDocuments({
+      date: { $gte: startOfDay, $lte: endOfDay }
+    });
+
+    // ✅ New Patients today
+    const newPatients = await Patient.countDocuments({
+      date: { $gte: startOfDay, $lte: endOfDay }
+    });
+
+    // ✅ Active Doctors
+    const doctorsActive = await Doctor.countDocuments({ isActive: true });
+
+    // ✅ Render dashboard
+    res.render("index", {
+      username: req.session.username || "User",
+      monthlyRevenue,
+      todayAppointments,
       newPatients,
       doctorsActive,
-      monthlyRevenue,
-      revenueData: JSON.stringify(revenueData),
-      username: req.session.user
+      revenueData: JSON.stringify([]) // later chart ke liye
     });
+
   } catch (err) {
-    console.error('Error loading dashboard:', err);
-    res.render('index', {
-      appointmentsToday: 0,
+    console.error("Error loading dashboard:", err);
+    res.render("index", {
+      username: req.session.username || "User",
+      monthlyRevenue: 0,
+      todayAppointments: 0,
       newPatients: 0,
       doctorsActive: 0,
-      monthlyRevenue: 0,
-      revenueData: JSON.stringify([]),
-      username: req.session.user
+      revenueData: JSON.stringify([])
     });
   }
 };
