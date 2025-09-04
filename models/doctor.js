@@ -6,7 +6,9 @@ const doctorSchema = new mongoose.Schema({
   contact: { type: String, required: true },
   email: { type: String, required: true },
   fee: { type: Number, required: true, min: 0 },
-  isActive: { type: Boolean, default: true }
+  isActive: { type: Boolean, default: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
+
 }, { timestamps: true });
 
 // Prevent OverwriteModelError

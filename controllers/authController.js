@@ -19,6 +19,7 @@ exports.login = async (req, res) => {
     if (!passwordMatch) return res.send('Incorrect password.');
 
     req.session.user = user.username;
+    req.session.userId = user._id;
     res.redirect('/index');
   } catch (err) {
     console.error(err);
@@ -34,6 +35,7 @@ exports.register = async (req, res) => {
     await user.save();
 
     req.session.user = username;
+    req.session.userId = user._id;
     res.redirect('/index');
   } catch (err) {
     console.error(err);

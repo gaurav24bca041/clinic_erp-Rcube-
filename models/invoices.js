@@ -5,7 +5,9 @@ const invoiceSchema = new mongoose.Schema({
   services: String,
   amount: Number,
   status: String,
-  date: { type: Date, default: Date.now }
+  date: { type: Date, default: Date.now },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
+
 });
 
 module.exports = mongoose.models.Invoice || mongoose.model('Invoice', invoiceSchema);

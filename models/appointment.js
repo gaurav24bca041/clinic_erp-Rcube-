@@ -6,7 +6,9 @@ const appointmentSchema = new mongoose.Schema({
   date: { type: Date, required: true },
   time: { type: String, required: true }, // Store time as string "HH:MM"
   reason: String,
-  status: { type: String, default: 'scheduled' } // e.g. scheduled, completed, cancelled
+  status: { type: String, default: 'scheduled' },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
+
 }, { timestamps: true });
 
 // Prevent OverwriteModelError

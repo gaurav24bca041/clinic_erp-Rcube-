@@ -5,15 +5,20 @@ const Invoice = require('../models/invoices');
 
 exports.getReports = async (req, res) => {
   try {
-    const patientsCount = await Patient.countDocuments();
-    const appointmentsCount = await Appointment.countDocuments();
-    const doctorsActive = await Doctor.countDocuments({ isActive: true });
+    if (!req.session.userId) return res.redirect('/');
+
+    const userId = req.session.userId;
+
+    const patientsCount = await Patient.countDocuments({ userId });
+    const appointmentsCount = await Appointment.countDocuments({ userId });
+    const doctorsActive = await Doctor.countDocuments({ userId, isActive: true });
 
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
 
     const invoices = await Invoice.find({
+      userId,
       date: { $gte: startOfMonth, $lte: endOfMonth },
       status: { $regex: /^paid$/i }
     });

@@ -35,7 +35,9 @@ const settingSchema = new mongoose.Schema({
     language: { type: String, default: "en" }
   },
 
-  updatedAt: { type: Date, default: Date.now }
+  updatedAt: { type: Date, default: Date.now },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
+
 });
 
 module.exports = mongoose.model("Setting", settingSchema);

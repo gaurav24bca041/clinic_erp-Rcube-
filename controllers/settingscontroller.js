@@ -1,14 +1,14 @@
-// controllers/settingsController.js
 const Setting = require("../models/setting");
 
-// Show settings page
 exports.getSettings = async (req, res) => {
+  if (!req.session.userId) return res.redirect('/'); // login check
   try {
-    let setting = await Setting.findOne();
+    // ✅ userId ke saath query
+    let setting = await Setting.findOne({ userId: req.session.userId });
     if (!setting) {
-      // if no settings exist, create default
-      setting = await Setting.create({
-        clinicName: "My Clinic ERP"
+      setting = await Setting.create({ 
+        clinicName: "My Clinic ERP",
+        userId: req.session.userId  // 👈 user-specific
       });
     }
     res.render("settings", { setting, message: null });
@@ -18,32 +18,16 @@ exports.getSettings = async (req, res) => {
   }
 };
 
-// Update settings
 exports.updateSettings = async (req, res) => {
+  if (!req.session.userId) return res.redirect('/'); // login check
   try {
-    const {
-      clinicName,
-      address,
-      phone,
-      email,
-      open,
-      close,
-      slotDuration,
-      maxPatientsPerDay,
-      currency,
-      taxPercent,
-      invoicePrefix,
-      enableSMS,
-      enableEmail,
-      reminderBefore,
-      darkMode,
-      language
-    } = req.body;
+    const { clinicName, address, phone, email, open, close, slotDuration, maxPatientsPerDay,
+            currency, taxPercent, invoicePrefix, enableSMS, enableEmail, reminderBefore,
+            darkMode, language } = req.body;
 
-    let setting = await Setting.findOne();
-    if (!setting) {
-      setting = new Setting();
-    }
+    // ✅ userId ke saath find
+    let setting = await Setting.findOne({ userId: req.session.userId }) || 
+                  new Setting({ userId: req.session.userId });
 
     setting.clinicName = clinicName;
     setting.address = address;

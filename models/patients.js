@@ -6,7 +6,9 @@ const patientSchema = new mongoose.Schema({
   gender: String,
   dob: Date,
   history: String,
-  date: { type: Date, default: Date.now }
+  date: { type: Date, default: Date.now },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
+
 
 }, { timestamps: true });
 

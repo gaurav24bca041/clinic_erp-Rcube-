@@ -1,9 +1,11 @@
 const Doctor = require('../models/doctor');
 
-// Show all doctors
+// Show all doctors (user-specific)
 exports.getDoctors = async (req, res) => {
   try {
-    const doctors = await Doctor.find();
+    if (!req.session.userId) return res.redirect('/login');
+
+    const doctors = await Doctor.find({ userId: req.session.userId });
     res.render('doctor', { doctors });
   } catch (err) {
     console.error("Error loading doctor:", err.message);
@@ -11,9 +13,11 @@ exports.getDoctors = async (req, res) => {
   }
 };
 
-// Add new doctor
+// Add new doctor (assign userId)
 exports.postAddDoctor = async (req, res) => {
   try {
+    if (!req.session.userId) return res.redirect('/');
+
     const { name, specialization, contact, email, fee, isActive } = req.body;
 
     const doctor = new Doctor({
@@ -22,7 +26,8 @@ exports.postAddDoctor = async (req, res) => {
       contact,
       email,
       fee,
-      isActive: isActive === 'on'
+      isActive: isActive === 'on',
+      userId: req.session.userId // 👈 important
     });
 
     await doctor.save();
