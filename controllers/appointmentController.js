@@ -6,7 +6,9 @@ exports.getAppointments = async (req, res) => {
   try {
     if (!req.session.userId) return res.redirect('/');
 
-    const appointments = await Appointment.find({ userId: req.session.userId }).sort({ date: 1, time: 1 });
+    const appointments = await Appointment.find({ userId: req.session.userId })
+      .sort({ date: 1, time: 1 });
+
     res.render('appointments', { appointments });
   } catch (err) {
     console.error("Error loading appointments:", err.message, err);
@@ -24,19 +26,27 @@ exports.postAddAppointment = async (req, res) => {
   if (!req.session.userId) return res.redirect('/login');
 
   try {
-    const appointmentDateTime = new Date(`${req.body.date}T${req.body.time}`);
+    const { patient, doctor, dob, date, time, address, phone, gender, reason, status } = req.body;
+
+    // --- Validate required fields ---
+    if (!patient || !doctor || !dob || !date || !time || !address || !phone) {
+      return res.status(400).send("Please fill all required fields");
+    }
+
+    const appointmentDateTime = new Date(`${date}T${time}`);
+    const dobDate = new Date(dob);
 
     await Appointment.create({
-      patient: req.body.patient,
-      gender: req.body.gender || "N/A",     // ✅ Gender from form
-      doctor: req.body.doctor,
-      dob: req.body.dob,
+      patient,
+      gender: gender || "N/A",
+      doctor,
+      dob: dobDate,
       date: appointmentDateTime,
-      time: req.body.time,
-      status: req.body.status || 'scheduled',
-      reason: req.body.reason,
-      address: req.body.address,
-      phone: req.body.phone,
+      time,
+      status: status || 'scheduled',
+      reason,
+      address,
+      phone,
       userId: req.session.userId
     });
 
@@ -63,19 +73,26 @@ exports.getEditAppointment = async (req, res) => {
 // --- Update Appointment ---
 exports.postEditAppointment = async (req, res) => {
   try {
-    const appointmentDateTime = new Date(`${req.body.date}T${req.body.time}`);
+    const { patient, doctor, dob, date, time, address, phone, gender, reason, status } = req.body;
+
+    if (!patient || !doctor || !dob || !date || !time || !address || !phone) {
+      return res.status(400).send("Please fill all required fields");
+    }
+
+    const appointmentDateTime = new Date(`${date}T${time}`);
+    const dobDate = new Date(dob);
 
     await Appointment.findByIdAndUpdate(req.params.id, {
-      patient: req.body.patient,
-      gender: req.body.gender || "N/A",     // ✅ Update gender
-      doctor: req.body.doctor,
-      dob: req.body.dob,
+      patient,
+      gender: gender || "N/A",
+      doctor,
+      dob: dobDate,
       date: appointmentDateTime,
-      time: req.body.time,
-      status: req.body.status,
-      reason: req.body.reason,
-      address: req.body.address,
-      phone: req.body.phone
+      time,
+      status,
+      reason,
+      address,
+      phone
     });
 
     res.redirect('/appointments');
@@ -103,7 +120,7 @@ exports.addToPatient = async (req, res) => {
 
     if (!appointment) return res.status(404).send("Appointment not found");
 
-    // Check if patient already exists (name + phone)
+    // --- Check if patient already exists (name + phone) ---
     const existingPatient = await Patient.findOne({
       name: appointment.patient,
       contact: appointment.phone,
@@ -115,7 +132,7 @@ exports.addToPatient = async (req, res) => {
       return res.redirect('/patients');
     }
 
-    // Add new patient from appointment
+    // --- Add new patient from appointment ---
     await Patient.create({
       name: appointment.patient,
       gender: appointment.gender || "N/A",

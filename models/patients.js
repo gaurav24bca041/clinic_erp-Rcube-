@@ -1,21 +1,16 @@
 const mongoose = require('mongoose');
 
 const patientSchema = new mongoose.Schema({
-  patientId: { type: String, unique: true }, // ✅ Custom Patient ID
+  patientId: { type: String, unique: true },
   name: { type: String, required: true },
   contact: { type: String, required: true },
-  gender: { type: String, required: true },
+  gender: { type: String, enum: ['Male','Female','Other','N/A'], default: 'N/A' },
   dob: { type: Date, required: true },
-  history: String,
-
-  // ✅ Extra fields from Appointment
+  history: { type: String, default: "" },
   address: { type: String, required: true },
   phone: { type: String, required: true },
-  status: { type: String, default: 'active' }, // active, inactive, etc.
-  
-  // For tracking doctor/patient relation
-  doctor: { type: String, ref: 'Doctor' },
-
+  status: { type: String, default: 'Active' },
+  doctor: { type: String, ref: 'Doctor', default: "N/A" },
   date: { type: Date, default: Date.now },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
 }, { timestamps: true });
@@ -24,8 +19,7 @@ const patientSchema = new mongoose.Schema({
 patientSchema.pre('save', async function (next) {
   if (!this.patientId) {
     const count = await mongoose.models.Patient.countDocuments();
-    this.patientId = `PAT-${(count + 1).toString().padStart(4, '0')}`; 
-    // Example: PAT-0001, PAT-0002 ...
+    this.patientId = `PAT-${(count + 1).toString().padStart(4, '0')}`;
   }
   next();
 });

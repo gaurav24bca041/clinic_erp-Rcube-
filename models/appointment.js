@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const appointmentSchema = new mongoose.Schema({
   appointmentId: { type: String, unique: true },
   patient: { type: String, required: true },
-  gender: { type: String, enum: ['Male', 'Female', 'Other'], default: 'N/A' }, // ✅ New field
+  gender: { type: String, enum: ['Male', 'Female', 'Other', 'N/A'], default: 'N/A' },
+
   doctor: { type: String, required: true },
   dob: { type: Date, required: true },
   date: { type: Date, required: true },
