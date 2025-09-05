@@ -16,4 +16,7 @@ router.post('/edit/:id', appointmentController.postEditAppointment);
 // Delete appointment
 router.post('/delete/:id', appointmentController.postDeleteAppointment);
 
+// ⭐ NEW: Add appointment details to patient list
+
+router.post('/add-to-patient/:id', appointmentController.addToPatient);
 module.exports = router;
