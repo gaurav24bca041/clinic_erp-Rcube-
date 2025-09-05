@@ -24,7 +24,8 @@ mongoose.connect("mongodb+srv://gk505305shah:sb2soklUvc7To9Sy@clinicerpdb.lhg2z2
 app.use('/', require('./routes/authRoutes'));
 app.use('/', require('./routes/dashboardRoutes'));
 // app.use('/patients', require('./routes/patientRoutes'));
-app.use('/', require('./routes/appointmentRoutes'));
+// ✅ Correct route mounting
+app.use('/appointments', require('./routes/appointmentRoutes'));
 app.use('/billing', require('./routes/billingRoutes'));
 app.use('/reports', require('./routes/reportRoutes'));
 app.use('/doctor', require('./routes/doctorRoutes'));

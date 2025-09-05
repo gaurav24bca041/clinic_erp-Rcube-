@@ -26,27 +26,42 @@
       </header>
 
       <section class="content">
-        <form class="form" action="/add-patients" method="post">
+        <!-- ✅ Correct action URL -->
+        <form class="form" action="/patients/add-patient" method="post">
+          
           <label>Full Name</label>
-          <input type="text" name="name" required />
+          <input type="text" name="name" placeholder="Enter patient's full name" required />
 
           <label>Phone Number</label>
-          <input type="tel" name="contact" required />
+          <input type="tel" name="contact" placeholder="Enter phone number" required />
 
           <label>Gender</label>
-          <select name="gender">
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
+          <select name="gender" required>
+            <option value="">-- Select Gender --</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
           </select>
 
           <label>Date of Birth</label>
           <input type="date" name="dob" />
 
-          <label>Medical History</label>
-          <textarea name="history" rows="3"></textarea>
+          <label>Address</label>
+          <input type="text" name="address" placeholder="Enter address" />
 
-          <button type="submit" class="btn">Save Patient</button>
+          <label>Assigned Doctor</label>
+          <input type="text" name="doctor" placeholder="Enter doctor name" />
+
+          <label>Status</label>
+          <select name="status">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+
+          <label>Medical History</label>
+          <textarea name="history" rows="3" placeholder="Any medical history..."></textarea>
+
+          <button type="submit" class="btn">💾 Save Patient</button>
         </form>
       </section>
     </main>
