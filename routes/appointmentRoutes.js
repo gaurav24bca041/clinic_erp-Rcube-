@@ -2,25 +2,25 @@ const express = require('express');
 const router = express.Router();
 const appointmentController = require('../controllers/appointmentController');
 
-// Show all appointments
+// --- Appointments List ---
 router.get('/', appointmentController.getAppointments);
 
-// Add appointment
+// --- Add Appointment ---
 router.get('/add-appointment', appointmentController.getAddAppointment);
 router.post('/add-appointment', appointmentController.postAddAppointment);
 
-// Edit appointment
+// --- Edit Appointment ---
 router.get('/edit/:id', appointmentController.getEditAppointment);
 router.post('/edit/:id', appointmentController.postEditAppointment);
 
-// ⭐ Reschedule appointment
+// --- Reschedule Appointment ---
 router.get('/reschedule/:id', appointmentController.getRescheduleAppointment);
 router.post('/reschedule/:id', appointmentController.postRescheduleAppointment);
 
-// Delete appointment
+// --- Delete Appointment ---
 router.post('/delete/:id', appointmentController.postDeleteAppointment);
 
-// Add appointment details to patient list
+// --- Add Appointment → Patients ---
 router.post('/add-to-patient/:id', appointmentController.addToPatient);
 
 module.exports = router;

@@ -12,7 +12,7 @@ exports.getAppointments = async (req, res) => {
 
     res.render('appointments', { appointments });
   } catch (err) {
-    console.error("Error loading appointments:", err.message, err);
+    console.error("❌ Error loading appointments:", err);
     res.status(500).send('Error loading appointments.');
   }
 };
@@ -20,30 +20,30 @@ exports.getAppointments = async (req, res) => {
 // --- Add Appointment Form ---
 exports.getAddAppointment = async (req, res) => {
   try {
-    if (!req.session.userId) return res.redirect('/login');
+    if (!req.session.userId) return res.redirect('/');
 
-    // ✅ Sirf active doctors fetch
+    // ✅ Sirf active doctors fetch karenge
     const doctors = await Doctor.find({
       userId: req.session.userId,
-      status: "active"
+      isActive: true 
     }).sort({ name: 1 });
 
     res.render('add-appointment', { doctors });
   } catch (err) {
-    console.error("Error loading add appointment form:", err.message, err);
+    console.error("❌ Error loading add appointment form:", err);
     res.status(500).send("Error loading form");
   }
 };
 
-// --- Add Appointment ---
+// --- Add Appointment Save ---
 exports.postAddAppointment = async (req, res) => {
-  if (!req.session.userId) return res.redirect('/login');
-
   try {
+    if (!req.session.userId) return res.redirect('/');
+
     const { patient, doctor, dob, date, time, address, phone, gender, reason, status } = req.body;
 
     if (!patient || !doctor || !dob || !date || !time || !address || !phone) {
-      return res.status(400).send("Please fill all required fields");
+      return res.status(400).send("⚠️ Please fill all required fields");
     }
 
     const appointmentDateTime = new Date(`${date}T${time}`);
@@ -52,7 +52,7 @@ exports.postAddAppointment = async (req, res) => {
     await Appointment.create({
       patient,
       gender: gender || "N/A",
-      doctor,   // doctor ka naam ya id save hoga (aapke hisaab se)
+      doctor,   // doctor ka naam ya ID (EJS me set karna hoga)
       dob: dobDate,
       date: appointmentDateTime,
       time,
@@ -65,7 +65,7 @@ exports.postAddAppointment = async (req, res) => {
 
     res.redirect('/appointments');
   } catch (err) {
-    console.error("Error adding appointment:", err.message, err);
+    console.error("❌ Error adding appointment:", err);
     res.status(500).send("Error adding appointment");
   }
 };
@@ -73,10 +73,11 @@ exports.postAddAppointment = async (req, res) => {
 // --- Edit Appointment Form ---
 exports.getEditAppointment = async (req, res) => {
   try {
+    if (!req.session.userId) return res.redirect('/');
+
     const appointment = await Appointment.findById(req.params.id);
     if (!appointment) return res.status(404).send("Appointment not found");
 
-    // ✅ Doctors list laa rahe hain
     const doctors = await Doctor.find({
       userId: req.session.userId,
       status: "active"
@@ -84,7 +85,7 @@ exports.getEditAppointment = async (req, res) => {
 
     res.render('edit-appointment', { appointment, doctors });
   } catch (err) {
-    console.error("Error loading appointment:", err.message, err);
+    console.error("❌ Error loading appointment:", err);
     res.status(500).send("Error loading appointment");
   }
 };
@@ -92,10 +93,12 @@ exports.getEditAppointment = async (req, res) => {
 // --- Update Appointment ---
 exports.postEditAppointment = async (req, res) => {
   try {
+    if (!req.session.userId) return res.redirect('/');
+
     const { patient, doctor, dob, date, time, address, phone, gender, reason, status } = req.body;
 
     if (!patient || !doctor || !dob || !date || !time || !address || !phone) {
-      return res.status(400).send("Please fill all required fields");
+      return res.status(400).send("⚠️ Please fill all required fields");
     }
 
     const appointmentDateTime = new Date(`${date}T${time}`);
@@ -116,31 +119,34 @@ exports.postEditAppointment = async (req, res) => {
 
     res.redirect('/appointments');
   } catch (err) {
-    console.error("Error updating appointment:", err.message, err);
+    console.error("❌ Error updating appointment:", err);
     res.status(500).send("Error updating appointment");
   }
 };
 
-// --- ✅ Reschedule Appointment Form ---
+// --- Reschedule Appointment Form ---
 exports.getRescheduleAppointment = async (req, res) => {
   try {
+    if (!req.session.userId) return res.redirect('/');
+
     const appointment = await Appointment.findById(req.params.id);
     if (!appointment) return res.status(404).send("Appointment not found");
 
     res.render('reschedule', { appointment });
   } catch (err) {
-    console.error("Error loading reschedule form:", err.message, err);
+    console.error("❌ Error loading reschedule form:", err);
     res.status(500).send("Error loading reschedule form");
   }
 };
 
-// --- ✅ Reschedule Appointment Save ---
+// --- Save Reschedule ---
 exports.postRescheduleAppointment = async (req, res) => {
   try {
-    const { date, time } = req.body;
+    if (!req.session.userId) return res.redirect('/');
 
+    const { date, time } = req.body;
     if (!date || !time) {
-      return res.status(400).send("Please select both date and time");
+      return res.status(400).send("⚠️ Please select both date and time");
     }
 
     const appointmentDateTime = new Date(`${date}T${time}`);
@@ -153,7 +159,7 @@ exports.postRescheduleAppointment = async (req, res) => {
 
     res.redirect('/appointments');
   } catch (err) {
-    console.error("Error rescheduling appointment:", err.message, err);
+    console.error("❌ Error rescheduling appointment:", err);
     res.status(500).send("Error rescheduling appointment");
   }
 };
@@ -161,21 +167,25 @@ exports.postRescheduleAppointment = async (req, res) => {
 // --- Delete Appointment ---
 exports.postDeleteAppointment = async (req, res) => {
   try {
+    if (!req.session.userId) return res.redirect('/');
+
     await Appointment.findByIdAndDelete(req.params.id);
     res.redirect('/appointments');
   } catch (err) {
-    console.error("Error deleting appointment:", err.message, err);
+    console.error("❌ Error deleting appointment:", err);
     res.status(500).send("Error deleting appointment");
   }
 };
 
-// --- Add Appointment to Patients ---
+// --- Add Appointment → Patients ---
 exports.addToPatient = async (req, res) => {
   try {
-    const appointment = await Appointment.findById(req.params.id);
+    if (!req.session.userId) return res.redirect('/');
 
+    const appointment = await Appointment.findById(req.params.id);
     if (!appointment) return res.status(404).send("Appointment not found");
 
+    // Check if already exists
     const existingPatient = await Patient.findOne({
       name: appointment.patient,
       contact: appointment.phone,
@@ -197,12 +207,12 @@ exports.addToPatient = async (req, res) => {
       history: appointment.reason,
       doctor: appointment.doctor,
       status: appointment.status,
-      userId: req.session.userId || appointment.userId
+      userId: req.session.userId
     });
 
     res.redirect('/patients');
   } catch (err) {
-    console.error("❌ Error adding appointment to patients:", err.message, err);
+    console.error("❌ Error adding appointment to patients:", err);
     res.status(500).send("Failed to add appointment to patients");
   }
 };
