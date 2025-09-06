@@ -4,9 +4,71 @@
   <meta charset="UTF-8" />
   <title>Patients - Clinic ERP</title>
   <link rel="stylesheet" href="/stylesheet/styles.css?v=2">
+  <style>
+    body, html { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f6f9; color: #333; }
+    .container { display: flex; min-height: 100vh; transition: all 0.3s ease; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: linear-gradient(180deg, #1b4965, #247ba0);
+      color: #fff;
+      padding: 25px 20px;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    .sidebar h2 { text-align: center; margin-bottom: 40px; }
+    .sidebar nav a { display: block; color: #e0f7fa; text-decoration: none; margin-bottom: 18px; padding: 12px 15px; border-radius: 8px; transition: 0.3s ease; }
+    .sidebar nav a.active, .sidebar nav a:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+    /* Topbar */
+    .topbar { background: #fff; padding: 15px 25px; border-bottom: 1px solid #e0e0e0; }
+    .topbar h1 { font-size: 1.6rem; font-weight: 600; margin: 0; color: #2f3e46; }
+    .topbar p { margin: 5px 0 0 0; color: #555; }
+
+    /* Main Content */
+    .main { flex: 1; display: flex; flex-direction: column; padding: 20px; }
+    .content { padding: 0; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+    thead { background: #4cafef; color: #fff; }
+    thead th { padding: 14px; text-align: left; font-size: 0.95rem; letter-spacing: 0.3px; }
+    tbody td { padding: 12px 14px; border-bottom: 1px solid #eaeaea; font-size: 0.95rem; }
+    tbody tr:hover { background: #f1faff; transition: background 0.3s; }
+
+    /* Buttons */
+    .btn { background: #2f80ed; color: #fff; padding: 8px 14px; border-radius: 8px; text-decoration: none; display: inline-block; margin-bottom: 20px; }
+    .btn:hover { background: #1f5bb5; }
+    .btn-small { padding: 5px 10px; border-radius: 6px; font-size: 0.85rem; margin-right: 5px; border: none; cursor: pointer; }
+    .btn-small.danger { background: #e74c3c; color: #fff; }
+    .btn-small.success { background: #2ecc71; color: #fff; }
+    
+    /* Mobile Topbar & Hamburger */
+    .topbar-mobile { display: none; align-items: center; justify-content: space-between; background: #1b4965; color: #fff; padding: 10px 20px; }
+    .menu-btn { display: none; background: #1b4965; color: #fff; border: none; font-size: 1.5rem; cursor: pointer; }
+
+    /* Responsive */
+    @media(max-width:780px){
+      .container { flex-direction: column; }
+      .sidebar { width: 100%; display: none; position: absolute; top: 50px; left: 0; z-index:1000; padding:15px 20px; }
+      .topbar-mobile { display: flex; }
+      .menu-btn { display: block; }
+      .main { padding: 15px; }
+      table { display: block; overflow-x: auto; white-space: nowrap; }
+    }
+  </style>
 </head>
 <body>
+
+  <!-- Mobile Topbar -->
+  <div class="topbar-mobile">
+    <button class="menu-btn">☰</button>
+    <h2>🩺 Clinic ERP</h2>
+  </div>
+
   <div class="container">
+    <!-- Sidebar -->
     <aside class="sidebar">
       <h2>🩺 Clinic ERP</h2>
       <nav>
@@ -20,6 +82,7 @@
       </nav>
     </aside>
 
+    <!-- Main Content -->
     <main class="main">
       <header class="topbar">
         <h1>Patients</h1>
@@ -75,7 +138,15 @@
       </section>
     </main>
   </div>
+
+  <script>
+    // Mobile sidebar toggle
+    const menuBtn = document.querySelector('.menu-btn');
+    const sidebar = document.querySelector('.sidebar');
+    menuBtn.addEventListener('click', () => {
+      sidebar.style.display = sidebar.style.display === 'block' ? 'none' : 'block';
+    });
+  </script>
+
 </body>
 </html>
-
-

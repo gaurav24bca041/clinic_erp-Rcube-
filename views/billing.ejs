@@ -4,9 +4,65 @@
   <meta charset="UTF-8" />
   <title>Billing - Clinic ERP</title>
   <link rel="stylesheet" href="/stylesheet/styles.css?v=2">
+  <style>
+    body, html { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f6f9; color: #333; }
+    .container { display: flex; min-height: 100vh; transition: all 0.3s ease; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: linear-gradient(180deg, #1b4965, #247ba0);
+      color: #fff;
+      padding: 25px 20px;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    .sidebar h2 { margin-bottom: 40px; text-align: center; }
+    .sidebar nav a { display: block; color: #e0f7fa; text-decoration: none; margin-bottom: 18px; padding: 12px 15px; border-radius: 8px; transition: 0.3s ease; }
+    .sidebar nav a.active, .sidebar nav a:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+    /* Topbar */
+    .topbar { margin-bottom: 20px; }
+    .topbar h1 { font-size: 1.8rem; color: #333; }
+
+    /* Buttons */
+    .btn, .btn-small { background: #2f80ed; color: #fff; border: none; border-radius: 6px; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-block; font-size: 0.9rem; padding: 6px 12px; margin: 2px; }
+    .btn:hover, .btn-small:hover { background: #1f5bb5; }
+
+    /* Content */
+    .main { flex: 1; padding: 25px; }
+    .content { background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+    /* Table */
+    .data-table { width: 100%; border-collapse: collapse; overflow-x: auto; display: block; }
+    .data-table thead { background: #e6f4f1; }
+    .data-table th, .data-table td { text-align: left; padding: 10px; border-bottom: 1px solid #ddd; white-space: nowrap; }
+
+    /* Mobile Topbar & Hamburger */
+    .topbar-mobile { display: none; align-items: center; justify-content: space-between; background: #1b4965; color: #fff; padding: 10px 20px; }
+    .menu-btn { display: none; background: #1b4965; color: #fff; border: none; font-size: 1.5rem; cursor: pointer; }
+
+    /* Responsive */
+    @media(max-width:780px){
+      .container { flex-direction: column; }
+      .sidebar { width: 100%; display: none; position: absolute; top: 50px; left: 0; z-index:1000; padding:15px 20px; }
+      .topbar-mobile { display: flex; }
+      .menu-btn { display: block; }
+      .main { padding: 15px; }
+      .data-table { display: block; overflow-x: auto; white-space: nowrap; }
+    }
+  </style>
 </head>
 <body>
+
+  <!-- Mobile Topbar -->
+  <div class="topbar-mobile">
+    <button class="menu-btn">☰</button>
+    <h2>🩺 Clinic ERP</h2>
+  </div>
+
   <div class="container">
+    <!-- Sidebar -->
     <aside class="sidebar">
       <h2>🩺 Clinic ERP</h2>
       <nav>
@@ -20,16 +76,15 @@
       </nav>
     </aside>
 
+    <!-- Main Content -->
     <main class="main">
       <header class="topbar">
         <h1>Billing</h1>
       </header>
 
       <section class="content">
-        <!-- Button to generate new invoice -->
         <a href="/billing/generate-invoice" class="btn">+ New Invoice</a>
 
-        <!-- Billing table -->
         <table class="data-table">
           <thead>
             <tr>
@@ -38,36 +93,41 @@
               <th>Amount</th>
               <th>Date</th>
               <th>Status</th>
-              <th>Servies</th>
+              <th>Services</th>
             </tr>
           </thead>
           <tbody>
             <% invoices.forEach(invoice => { %>
               <tr>
-                    <td><%= invoice._id.toString().slice(-5).toUpperCase() %></td>
-                    <td><%= invoice.patientName %></td>
-                    <td>₹<%= invoice.amount %></td>
-                    <td><%= invoice.date.toDateString() %></td>
-                    <td>
-                        <% if (invoice.status === 'Unpaid') { %>
-                        <form action="/billing/pay/<%= invoice._id %>" method="POST" style="display:inline;">
-                            <button type="submit" class="btn">Mark as Paid</button>
-                        </form>
-                        <% } else { %>
-                        <span style="color: green;"><%= invoice.status %></span>
-                        <% } %>
-                    </td>
-                    <td><%= invoice.services %></td>
+                <td><%= invoice._id.toString().slice(-5).toUpperCase() %></td>
+                <td><%= invoice.patientName %></td>
+                <td>₹<%= invoice.amount %></td>
+                <td><%= invoice.date.toDateString() %></td>
+                <td>
+                  <% if (invoice.status === 'Unpaid') { %>
+                  <form action="/billing/pay/<%= invoice._id %>" method="POST" style="display:inline;">
+                    <button type="submit" class="btn-small">Mark as Paid</button>
+                  </form>
+                  <% } else { %>
+                  <span style="color: green;"><%= invoice.status %></span>
+                  <% } %>
+                </td>
+                <td><%= invoice.services %></td>
               </tr>
-
             <% }) %>
           </tbody>
         </table>
       </section>
     </main>
   </div>
+
+  <script>
+    // Mobile sidebar toggle
+    const menuBtn = document.querySelector('.menu-btn');
+    const sidebar = document.querySelector('.sidebar');
+    menuBtn.addEventListener('click', () => {
+      sidebar.style.display = sidebar.style.display === 'block' ? 'none' : 'block';
+    });
+  </script>
 </body>
 </html>
-
-
-
