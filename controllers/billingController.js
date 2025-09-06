@@ -2,7 +2,7 @@ const Invoice = require('../models/invoices');
 
 exports.getBilling = async (req, res) => {
   try {
-    if (!req.session.userId) return res.redirect('/login');
+    if (!req.session.userId) return res.redirect('/');
 
     const invoices = await Invoice.find({ userId: req.session.userId }).sort({ date: -1 });
     res.render('billing', { invoices });
@@ -14,7 +14,7 @@ exports.getBilling = async (req, res) => {
 
 exports.payInvoice = async (req, res) => {
   try {
-    if (!req.session.userId) return res.redirect('/login');
+    if (!req.session.userId) return res.redirect('/');
 
     const invoice = await Invoice.findOne({ _id: req.params.id, userId: req.session.userId });
     if (!invoice) return res.status(404).send('Invoice not found');

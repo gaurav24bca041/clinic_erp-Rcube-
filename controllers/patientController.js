@@ -3,7 +3,7 @@ const Patient = require('../models/patients');
 // --- List All Patients ---
 exports.getPatients = async (req, res) => {
   try {
-    if (!req.session.userId) return res.redirect('/login');
+    if (!req.session.userId) return res.redirect('/');
 
     const patients = await Patient.find({ userId: req.session.userId }).sort({ createdAt: -1 });
     res.render('patients', { username: req.session.user, patients });
@@ -20,7 +20,7 @@ exports.getAddPatient = (req, res) => {
 
 // --- Save New Patient ---
 exports.postAddPatient = async (req, res) => {
-  if (!req.session.userId) return res.redirect('/login');
+  if (!req.session.userId) return res.redirect('/');
 
   const { name, contact, gender, dob, history, address, phone, status, doctor } = req.body;
 
