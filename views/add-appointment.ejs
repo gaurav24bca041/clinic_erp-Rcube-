@@ -30,28 +30,46 @@
       <section class="content">
         <form action="/appointments/add-appointment" method="POST" class="form">
           
+          <!-- Patient -->
           <label for="patient">Patient Name:</label>
           <input type="text" id="patient" name="patient" required />
 
-          <!-- ✅ New DOB field -->
+          <!-- DOB -->
           <label for="dob">Date of Birth:</label>
           <input type="date" id="dob" name="dob" required />
 
-          <label for="doctor">Doctor Name:</label>
-          <input type="text" id="doctor" name="doctor" required />
+          <!-- Doctor Dropdown -->
+          <label for="doctor">Doctor:</label>
+          <select id="doctor" name="doctor" required>
+            <option value="">-- Select Doctor --</option>
+            <% if (doctors && doctors.length > 0) { %>
+              <% doctors.forEach((doc) => { %>
+                <option value="<%= doc.name %>">
+                  <%= doc.name %> - (<%= doc.specialization %>)
+                </option>
+              <% }) %>
+            <% } else { %>
+              <option disabled>No active doctors found</option>
+            <% } %>
+          </select>
 
+          <!-- Appointment Date -->
           <label for="date">Appointment Date:</label>
           <input type="date" id="date" name="date" required />
 
+          <!-- Appointment Time -->
           <label for="time">Appointment Time:</label>
           <input type="time" id="time" name="time" required />
 
+          <!-- Address -->
           <label for="address">Address:</label>
           <input type="text" id="address" name="address" required />
 
+          <!-- Phone -->
           <label for="phone">Phone Number:</label>
           <input type="text" id="phone" name="phone" required />
 
+          <!-- Status -->
           <label for="status">Status:</label>
           <select id="status" name="status" required>
             <option value="scheduled">Scheduled</option>
@@ -59,6 +77,7 @@
             <option value="cancelled">Cancelled</option>
           </select>
 
+          <!-- Submit -->
           <button type="submit" class="btn">Save Appointment</button>
         </form>
       </section>

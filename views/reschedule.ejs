@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reschedule Appointment</title>
+  <link rel="stylesheet" href="/stylesheet/styles.css?v=2">
+</head>
+<body>
+  <div class="container">
+    <main class="main">
+      <h1>📅 Reschedule Appointment</h1>
+
+      <form action="/appointments/reschedule/<%= appointment._id %>" method="POST" class="form">
+        <p><strong>Patient:</strong> <%= appointment.patient %></p>
+        <p><strong>Doctor:</strong> <%= appointment.doctor %></p>
+
+        <label for="date">New Date:</label>
+        <input type="date" name="date" value="<%= appointment.date ? appointment.date.toISOString().split('T')[0] : '' %>" required>
+
+        <label for="time">New Time:</label>
+        <input type="time" name="time" value="<%= appointment.time %>" required>
+
+        <button type="submit" class="btn">✅ Save</button>
+        <a href="/appointments" class="btn danger">❌ Cancel</a>
+      </form>
+    </main>
+  </div>
+</body>
+</html>

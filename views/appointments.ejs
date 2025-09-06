@@ -33,7 +33,7 @@
             <tr>
               <th>ID</th> 
               <th>Patient</th>
-              <th>Gender</th> <!-- ✅ Gender column added -->
+              <th>Gender</th>
               <th>DOB</th>
               <th>Doctor</th>
               <th>Address</th>
@@ -50,7 +50,7 @@
                 <tr>
                   <td><%= appointment?.appointmentId %></td>
                   <td><%= appointment?.patient %></td>
-                  <td><%= appointment?.gender || "N/A" %></td> <!-- ✅ Show gender -->
+                  <td><%= appointment?.gender || "N/A" %></td>
                   <td><%= appointment?.dob ? appointment.dob.toISOString().split('T')[0] : '' %></td>
                   <td><%= appointment?.doctor %></td>
                   <td><%= appointment?.address %></td>
@@ -65,10 +65,12 @@
                       <button type="submit" class="btn-small danger" onclick="return confirm('Are you sure you want to delete this appointment?')">🗑 Delete</button>
                     </form>
 
-                    <!-- Add to Patients button -->
                     <form action="/appointments/add-to-patient/<%= appointment._id %>" method="POST" style="display:inline;">
                       <button type="submit" class="btn-small success">➕ Add to Patients</button>
                     </form>
+
+                    <!-- ✅ Reschedule Button -->
+                    <a href="/appointments/reschedule/<%= appointment._id %>" class="btn-small warning">📅 Reschedule</a>
                   </td>
                 </tr>
               <% }) %>

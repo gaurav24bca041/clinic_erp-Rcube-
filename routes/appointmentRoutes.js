@@ -13,10 +13,14 @@ router.post('/add-appointment', appointmentController.postAddAppointment);
 router.get('/edit/:id', appointmentController.getEditAppointment);
 router.post('/edit/:id', appointmentController.postEditAppointment);
 
+// ⭐ Reschedule appointment
+router.get('/reschedule/:id', appointmentController.getRescheduleAppointment);
+router.post('/reschedule/:id', appointmentController.postRescheduleAppointment);
+
 // Delete appointment
 router.post('/delete/:id', appointmentController.postDeleteAppointment);
 
-// ⭐ NEW: Add appointment details to patient list
-
+// Add appointment details to patient list
 router.post('/add-to-patient/:id', appointmentController.addToPatient);
+
 module.exports = router;
