@@ -22,7 +22,7 @@
     .sidebar nav a.active, .sidebar nav a:hover { background: rgba(255,255,255,0.2); color: #fff; }
 
     /* Topbar */
-    .topbar { margin-bottom: 20px; }
+    .topbar { margin-bottom: 20px; display:flex; align-items:center; justify-content:space-between; }
     .topbar h1 { font-size: 1.8rem; color: #333; }
 
     /* Buttons */
@@ -34,6 +34,8 @@
     .btn-small.success:hover { background: #1e8449; }
     .btn-small.warning { background: #f2c94c; color: #333; }
     .btn-small.warning:hover { background: #d4ac0d; }
+    .btn-small.info { background: #56ccf2; }
+    .btn-small.info:hover { background: #2d9cdb; }
 
     /* Content */
     .main { flex: 1; padding: 25px; }
@@ -43,6 +45,10 @@
     .data-table { width: 100%; border-collapse: collapse; overflow-x: auto; display: block; }
     .data-table thead { background: #e6f4f1; }
     .data-table th, .data-table td { text-align: left; padding: 10px; border-bottom: 1px solid #ddd; white-space: nowrap; }
+
+    /* Search Bar */
+    .search-box { margin-bottom: 15px; }
+    .search-box input { width: 100%; max-width: 350px; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; }
 
     /* Mobile Topbar & Hamburger */
     .topbar-mobile { display: none; align-items: center; justify-content: space-between; background: #1b4965; color: #fff; padding: 10px 20px; }
@@ -86,12 +92,16 @@
     <main class="main">
       <header class="topbar">
         <h1>Appointments</h1>
+        <a href="/appointments/add-appointment" class="btn">+ New Appointment</a>
       </header>
 
       <section class="content">
-        <a href="/appointments/add-appointment" class="btn">+ New Appointment</a>
+        <!-- 🔍 Search Box -->
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search by Patient, Phone, Doctor, Status...">
+        </div>
 
-        <table class="data-table">
+        <table class="data-table" id="appointmentsTable">
           <thead>
             <tr>
               <th>ID</th> 
@@ -130,6 +140,8 @@
                       <button type="submit" class="btn-small success">➕ Add</button>
                     </form>
                     <a href="/appointments/reschedule/<%= appointment._id %>" class="btn-small warning">📅 Reschedule</a>
+                    <!-- ✅ Re-Appointment Button -->
+                    <a href="/appointments/re-appointment/<%= appointment._id %>" class="btn-small info">🔁 Re-Appointment</a>
                   </td>
                 </tr>
               <% }) %>
@@ -150,6 +162,18 @@
     const sidebar = document.querySelector('.sidebar');
     menuBtn.addEventListener('click', () => {
       sidebar.style.display = sidebar.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // 🔍 Search Functionality
+    const searchInput = document.getElementById('searchInput');
+    const tableRows = document.querySelectorAll('#appointmentsTable tbody tr');
+
+    searchInput.addEventListener('keyup', () => {
+      const searchValue = searchInput.value.toLowerCase();
+      tableRows.forEach(row => {
+        const rowText = row.innerText.toLowerCase();
+        row.style.display = rowText.includes(searchValue) ? '' : 'none';
+      });
     });
   </script>
 

@@ -23,4 +23,7 @@ router.post('/delete/:id', appointmentController.postDeleteAppointment);
 // --- Add Appointment → Patients ---
 router.post('/add-to-patient/:id', appointmentController.addToPatient);
 
+//--- add reappointment ---
+router.get("/re-appointment/:id", appointmentController.getReAppointment);
+
 module.exports = router;

@@ -22,13 +22,13 @@ exports.getAddAppointment = async (req, res) => {
   try {
     if (!req.session.userId) return res.redirect('/');
 
-    // ✅ Sirf active doctors fetch karenge
     const doctors = await Doctor.find({
       userId: req.session.userId,
-      isActive: true 
+      isActive: true
     }).sort({ name: 1 });
 
-    res.render('add-appointment', { doctors });
+    // ✅ By default no old appointment (for normal Add form)
+    res.render('add-appointment', { doctors, oldAppointment: null });
   } catch (err) {
     console.error("❌ Error loading add appointment form:", err);
     res.status(500).send("Error loading form");
@@ -52,7 +52,7 @@ exports.postAddAppointment = async (req, res) => {
     await Appointment.create({
       patient,
       gender: gender || "N/A",
-      doctor,   // doctor ka naam ya ID (EJS me set karna hoga)
+      doctor,
       dob: dobDate,
       date: appointmentDateTime,
       time,
@@ -80,7 +80,7 @@ exports.getEditAppointment = async (req, res) => {
 
     const doctors = await Doctor.find({
       userId: req.session.userId,
-      status: "active"
+      isActive: true
     }).sort({ name: 1 });
 
     res.render('edit-appointment', { appointment, doctors });
@@ -154,7 +154,7 @@ exports.postRescheduleAppointment = async (req, res) => {
     await Appointment.findByIdAndUpdate(req.params.id, {
       date: appointmentDateTime,
       time,
-      status: "rescheduled"  // optional
+      status: "rescheduled"
     });
 
     res.redirect('/appointments');
@@ -185,7 +185,6 @@ exports.addToPatient = async (req, res) => {
     const appointment = await Appointment.findById(req.params.id);
     if (!appointment) return res.status(404).send("Appointment not found");
 
-    // Check if already exists
     const existingPatient = await Patient.findOne({
       name: appointment.patient,
       contact: appointment.phone,
@@ -216,3 +215,28 @@ exports.addToPatient = async (req, res) => {
     res.status(500).send("Failed to add appointment to patients");
   }
 };
+
+// --- Re-Appointment (open add form prefilled) ---
+exports.getReAppointment = async (req, res) => {
+  try {
+    if (!req.session.userId) return res.redirect('/');
+
+    const appointment = await Appointment.findById(req.params.id);
+    if (!appointment) return res.status(404).send("Appointment not found");
+
+    const doctors = await Doctor.find({
+      userId: req.session.userId,
+      isActive: true
+    }).sort({ name: 1 });
+
+    // ✅ Open Add form with old data prefilled
+    res.render("add-appointment", {
+      doctors,
+      oldAppointment: appointment
+    });
+  } catch (err) {
+    console.error("❌ Error loading re-appointment form:", err);
+    res.status(500).send("Error loading re-appointment form");
+  }
+};
+
