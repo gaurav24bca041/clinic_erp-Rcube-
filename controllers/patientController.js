@@ -22,7 +22,7 @@ exports.getAddPatient = (req, res) => {
 exports.postAddPatient = async (req, res) => {
   if (!req.session.userId) return res.redirect('/');
 
-  const { name, contact, gender, dob, history, address, phone, status, doctor } = req.body;
+  const { name, contact, gender, dob, address, phone, status, doctor } = req.body;
 
   console.log("Form Data:", req.body); // Debug
 
@@ -32,11 +32,11 @@ exports.postAddPatient = async (req, res) => {
       contact: contact || "N/A",
       gender: ['Male','Female','Other','N/A'].includes(gender) ? gender : "N/A",
       dob: dob ? new Date(dob) : new Date(),
-      history: history || "",
       address: address || "N/A",
       phone: phone || "N/A",
       status: status || "Active",
       doctor: doctor || "N/A",
+      uploads: [], // ✅ initially no files
       userId: req.session.userId
     });
 
@@ -62,14 +62,13 @@ exports.getEditPatient = async (req, res) => {
 // --- Update Patient ---
 exports.postEditPatient = async (req, res) => {
   try {
-    const { name, contact, gender, dob, history, address, phone, status, doctor } = req.body;
+    const { name, contact, gender, dob, address, phone, status, doctor } = req.body;
 
     await Patient.findByIdAndUpdate(req.params.id, {
       name: name || "Unknown",
       contact: contact || "N/A",
       gender: ['Male','Female','Other','N/A'].includes(gender) ? gender : "N/A",
       dob: dob ? new Date(dob) : new Date(),
-      history: history || "",
       address: address || "N/A",
       phone: phone || "N/A",
       status: status || "Active",
@@ -91,5 +90,20 @@ exports.postDeletePatient = async (req, res) => {
   } catch (err) {
     console.error("Error deleting patient:", err);
     res.status(500).send("Failed to delete patient.");
+  }
+};
+
+// --- Upload Files ---
+exports.postUploadFiles = async (req, res) => {
+  try {
+    const patientId = req.params.id;
+    const files = req.files.map(file => '/uploads/patient_files/' + file.filename);
+
+    await Patient.findByIdAndUpdate(patientId, { $push: { uploads: { $each: files } } });
+
+    res.redirect('/patients');
+  } catch (err) {
+    console.error("Error uploading files:", err);
+    res.status(500).send("Failed to upload files.");
   }
 };

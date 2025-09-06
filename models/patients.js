@@ -6,11 +6,11 @@ const patientSchema = new mongoose.Schema({
   contact: { type: String, required: true },
   gender: { type: String, enum: ['Male','Female','Other','N/A'], default: 'N/A' },
   dob: { type: Date, required: true },
-  history: { type: String, default: "" },
   address: { type: String, required: true },
   phone: { type: String, required: true },
   status: { type: String, default: 'Active' },
   doctor: { type: String, ref: 'Doctor', default: "N/A" },
+  uploads: [String], // ✅ multiple file paths
   date: { type: Date, default: Date.now },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
 }, { timestamps: true });

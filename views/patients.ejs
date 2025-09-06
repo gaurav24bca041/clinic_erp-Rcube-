@@ -103,7 +103,7 @@
               <th>Address</th>
               <th>Status</th>
               <th>Doctor</th>
-              <th>History</th>
+              <th>Upload</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -119,7 +119,22 @@
                   <td><%= patient.address || '-' %></td>
                   <td><%= patient.status || 'active' %></td>
                   <td><%= patient.doctor || '-' %></td>
-                  <td><%= patient.history || '-' %></td>
+                  
+                  <!-- Upload -->
+                  <td>
+                    <form action="/patients/upload/<%= patient._id %>" method="POST" enctype="multipart/form-data">
+                      <input type="file" name="files" multiple class="btn-small" />
+                      <button type="submit" class="btn-small success">⬆ Upload</button>
+                    </form>
+                    <% if (patient.uploads && patient.uploads.length > 0) { %>
+                      <ul>
+                        <% patient.uploads.forEach(function(file) { %>
+                          <li><a href="<%= file %>" target="_blank">📂 File</a></li>
+                        <% }) %>
+                      </ul>
+                    <% } %>
+                  </td>
+
                   <td>
                     <a href="/patients/edit/<%= patient._id %>" class="btn-small">✏️ Edit</a>
                     <form action="/patients/delete/<%= patient._id %>" method="POST" style="display:inline;">
@@ -140,7 +155,6 @@
   </div>
 
   <script>
-    // Mobile sidebar toggle
     const menuBtn = document.querySelector('.menu-btn');
     const sidebar = document.querySelector('.sidebar');
     menuBtn.addEventListener('click', () => {
