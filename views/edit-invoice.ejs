@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Invoice - Clinic ERP</title>
+  <link rel="stylesheet" href="/stylesheet/styles.css?v=2">
+  <style>
+    body, html { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f6f9; color: #333; }
+    .container { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar { width: 240px; background: linear-gradient(180deg, #1b4965, #247ba0); color: #fff; padding: 25px 20px; }
+    .sidebar h2 { margin-bottom: 40px; text-align: center; }
+    .sidebar nav a { display: block; color: #e0f7fa; text-decoration: none; margin-bottom: 18px; padding: 12px 15px; border-radius: 8px; }
+    .sidebar nav a.active, .sidebar nav a:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+    /* Main */
+    .main { flex: 1; padding: 25px; }
+    .content { background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+    form label { display: block; margin-top: 15px; font-weight: bold; }
+    form input, form textarea, form select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 6px; border: 1px solid #ccc; }
+    form button { margin-top: 20px; background: #2f80ed; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+    form button:hover { background: #1f5bb5; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>🩺 Clinic ERP</h2>
+      <nav>
+        <a href="/index">Dashboard</a>
+        <a href="/patients">Patients</a>
+        <a href="/appointments">Appointments</a>
+        <a href="/billing" class="active">Billing</a>
+        <a href="/reports">Reports</a>
+        <a href="/doctor">Doctors</a>
+        <a href="/settings">Settings</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+      <header class="topbar">
+        <h1>Edit Invoice</h1>
+      </header>
+
+      <section class="content">
+        <form action="/billing/edit/<%= invoice._id %>" method="POST">
+          <label for="patientName">Patient Name</label>
+          <input type="text" id="patientName" name="patientName" value="<%= invoice.patientName %>" required>
+
+          <label for="services">Services</label>
+          <textarea id="services" name="services" rows="3" required><%= invoice.services %></textarea>
+
+          <label for="amount">Amount (₹)</label>
+          <input type="number" id="amount" name="amount" value="<%= invoice.amount %>" required>
+
+          <label for="status">Status</label>
+          <select id="status" name="status" required>
+            <option value="Unpaid" <%= invoice.status === 'Unpaid' ? 'selected' : '' %>>Unpaid</option>
+            <option value="Paid" <%= invoice.status === 'Paid' ? 'selected' : '' %>>Paid</option>
+          </select>
+
+          <label for="date">Date</label>
+          <input type="date" id="date" name="date" value="<%= invoice.date.toISOString().split('T')[0] %>" required>
+
+          <button type="submit">Update Invoice</button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+</body>
+</html>

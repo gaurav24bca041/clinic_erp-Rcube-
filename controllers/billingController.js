@@ -73,3 +73,57 @@ exports.postGenerateInvoice = async (req, res) => {
     res.send('Error saving invoice: ' + err);
   }
 };
+// --- Load Edit Invoice Form ---
+exports.getEditInvoice = async (req, res) => {
+  try {
+    if (!req.session.userId) return res.redirect('/');
+
+    const invoice = await Invoice.findOne({ _id: req.params.id, userId: req.session.userId });
+    if (!invoice) return res.status(404).send('Invoice not found');
+
+    res.render('edit-invoice', { invoice });
+  } catch (err) {
+    console.error("Error loading invoice for edit:", err);
+    res.send('Error loading invoice for edit: ' + err);
+  }
+};
+
+// --- Save Edited Invoice ---
+exports.postEditInvoice = async (req, res) => {
+  try {
+    if (!req.session.userId) return res.redirect('/');
+
+    const { patientName, services, amount, status, date } = req.body;
+
+    const invoice = await Invoice.findOne({ _id: req.params.id, userId: req.session.userId });
+    if (!invoice) return res.status(404).send('Invoice not found');
+
+    invoice.patientName = patientName;
+    invoice.services = services;
+    invoice.amount = amount;
+    invoice.status = status;
+    invoice.date = new Date(date);
+
+    await invoice.save();
+    res.redirect('/billing');
+  } catch (err) {
+    console.error("Error updating invoice:", err);
+    res.send('Error updating invoice: ' + err);
+  }
+};
+
+// --- Delete Invoice ---
+exports.deleteInvoice = async (req, res) => {
+  try {
+    if (!req.session.userId) return res.redirect('/');
+
+    const invoice = await Invoice.findOneAndDelete({ _id: req.params.id, userId: req.session.userId });
+    if (!invoice) return res.status(404).send('Invoice not found');
+
+    res.redirect('/billing');
+  } catch (err) {
+    console.error("Error deleting invoice:", err);
+    res.send('Error deleting invoice: ' + err);
+  }
+};
+
