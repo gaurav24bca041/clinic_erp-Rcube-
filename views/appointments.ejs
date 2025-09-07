@@ -54,6 +54,31 @@
     .topbar-mobile { display: none; align-items: center; justify-content: space-between; background: #1b4965; color: #fff; padding: 10px 20px; }
     .menu-btn { display: none; background: #1b4965; color: #fff; border: none; font-size: 1.5rem; cursor: pointer; }
 
+    /* Modal Popup */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+    }
+    .modal-content {
+      background: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%; max-width: 500px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .close {
+      float: right;
+      font-size: 22px;
+      cursor: pointer;
+      color: #555;
+    }
+    .close:hover { color: #000; }
+
     /* Responsive */
     @media(max-width:780px){
       .container { flex-direction: column; }
@@ -98,7 +123,7 @@
       <section class="content">
         <!-- 🔍 Search Box -->
         <div class="search-box">
-          <input type="text" id="searchInput" placeholder="Search by Patient, Phone, Doctor, Status...">
+          <input type="text" id="searchInput" placeholder="Search by Patient, Phone...">
         </div>
 
         <table class="data-table" id="appointmentsTable">
@@ -106,14 +131,7 @@
             <tr>
               <th>ID</th> 
               <th>Patient</th>
-              <th>Gender</th>
-              <th>DOB</th>
-              <th>Doctor</th>
-              <th>Address</th>
               <th>Phone</th>
-              <th>Status</th>
-              <th>Date</th>
-              <th>Time</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -123,40 +141,45 @@
                 <tr>
                   <td><%= appointment?.appointmentId %></td>
                   <td><%= appointment?.patient %></td>
-                  <td><%= appointment?.gender || "N/A" %></td>
-                  <td><%= appointment?.dob ? appointment.dob.toISOString().split('T')[0] : '' %></td>
-                  <td><%= appointment?.doctor %></td>
-                  <td><%= appointment?.address %></td>
                   <td><%= appointment?.phone %></td>
-                  <!-- ✅ Status Dropdown -->
                   <td>
-                    <form action="/appointments/update-status/<%= appointment._id %>" method="POST">
-                      <select name="status" onchange="this.form.submit()" style="padding:5px; border-radius:6px; border:1px solid #ccc;">
-                        <option value="Pending" <%= appointment.status === "Pending" ? "selected" : "" %>>Pending</option>
-                        <option value="Confirmed" <%= appointment.status === "Confirmed" ? "selected" : "" %>>Confirmed</option>
-                        <option value="Completed" <%= appointment.status === "Completed" ? "selected" : "" %>>Completed</option>
-                        <option value="Cancelled" <%= appointment.status === "Cancelled" ? "selected" : "" %>>Cancelled</option>
-                      </select>
-                    </form>
-                  </td>
-                  <td><%= appointment?.date?.toLocaleDateString() %></td>
-                  <td><%= appointment?.time %></td>
-                  <td>
+                    <button class="btn-small info" onclick="showInfo('<%= appointment._id %>')">ℹ️ Info</button>
                     <a href="/appointments/edit/<%= appointment._id %>" class="btn-small">✏️ Edit</a>
                     <form action="/appointments/delete/<%= appointment._id %>" method="POST" style="display:inline;">
                       <button type="submit" class="btn-small danger" onclick="return confirm('Are you sure?')">🗑 Delete</button>
                     </form>
-                    <form action="/appointments/add-to-patient/<%= appointment._id %>" method="POST" style="display:inline;">
-                      <button type="submit" class="btn-small success">➕ Add</button>
-                    </form>
-                    <a href="/appointments/reschedule/<%= appointment._id %>" class="btn-small warning">📅 Reschedule</a>
-                    <a href="/appointments/re-appointment/<%= appointment._id %>" class="btn-small info">🔁 Re-Appointment</a>
                   </td>
                 </tr>
+
+                <!-- Info Modal -->
+                <div id="infoModal-<%= appointment._id %>" class="modal">
+                  <div class="modal-content">
+                    <span class="close" onclick="closeInfo('<%= appointment._id %>')">&times;</span>
+                    <h3>Appointment Details</h3>
+                    <p><b>Patient:</b> <%= appointment?.patient %></p>
+                    <p><b>Gender:</b> <%= appointment?.gender || "N/A" %></p>
+                    <p><b>DOB:</b> <%= appointment?.dob ? appointment.dob.toISOString().split('T')[0] : '' %></p>
+                    <p><b>Doctor:</b> <%= appointment?.doctor %></p>
+                    <p><b>Address:</b> <%= appointment?.address %></p>
+                    <p><b>Phone:</b> <%= appointment?.phone %></p>
+                    <p><b>Status:</b> <%= appointment?.status %></p>
+                    <p><b>Date:</b> <%= appointment?.date?.toLocaleDateString() %></p>
+                    <p><b>Time:</b> <%= appointment?.time %></p>
+
+                    <!-- Action Buttons inside Modal -->
+                    <div style="margin-top:15px;">
+                      <a href="/appointments/reschedule/<%= appointment._id %>" class="btn-small warning">📅 Reschedule</a>
+                      <a href="/appointments/re-appointment/<%= appointment._id %>" class="btn-small info">🔁 Re-Appointment</a>
+                      <form action="/appointments/add-to-patient/<%= appointment._id %>" method="POST" style="display:inline;">
+                        <button type="submit" class="btn-small success">➕ Add to Patient</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
               <% }) %>
             <% } else { %>
               <tr>
-                <td colspan="11">No appointments found.</td>
+                <td colspan="4">No appointments found.</td>
               </tr>
             <% } %>
           </tbody>
@@ -184,6 +207,20 @@
         row.style.display = rowText.includes(searchValue) ? '' : 'none';
       });
     });
+
+    // Modal functions
+    function showInfo(id) {
+      document.getElementById("infoModal-" + id).style.display = "block";
+    }
+    function closeInfo(id) {
+      document.getElementById("infoModal-" + id).style.display = "none";
+    }
+    window.onclick = function(event) {
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+        if (event.target === modal) modal.style.display = "none";
+      });
+    }
   </script>
 
 </body>
