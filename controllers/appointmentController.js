@@ -27,7 +27,6 @@ exports.getAddAppointment = async (req, res) => {
       isActive: true
     }).sort({ name: 1 });
 
-    // ✅ By default no old appointment (for normal Add form)
     res.render('add-appointment', { doctors, oldAppointment: null });
   } catch (err) {
     console.error("❌ Error loading add appointment form:", err);
@@ -56,7 +55,7 @@ exports.postAddAppointment = async (req, res) => {
       dob: dobDate,
       date: appointmentDateTime,
       time,
-      status: status || 'scheduled',
+      status: status || 'Pending',
       reason,
       address,
       phone,
@@ -154,7 +153,7 @@ exports.postRescheduleAppointment = async (req, res) => {
     await Appointment.findByIdAndUpdate(req.params.id, {
       date: appointmentDateTime,
       time,
-      status: "rescheduled"
+      status: "Rescheduled"
     });
 
     res.redirect('/appointments');
@@ -229,7 +228,6 @@ exports.getReAppointment = async (req, res) => {
       isActive: true
     }).sort({ name: 1 });
 
-    // ✅ Open Add form with old data prefilled
     res.render("add-appointment", {
       doctors,
       oldAppointment: appointment
@@ -240,3 +238,18 @@ exports.getReAppointment = async (req, res) => {
   }
 };
 
+// --- ✅ Update Status (Dropdown se) ---
+exports.updateStatus = async (req, res) => {
+  try {
+    if (!req.session.userId) return res.redirect('/');
+
+    await Appointment.findByIdAndUpdate(req.params.id, {
+      status: req.body.status
+    });
+
+    res.redirect('/appointments');
+  } catch (err) {
+    console.error("❌ Error updating status:", err);
+    res.status(500).send("Error updating status");
+  }
+};

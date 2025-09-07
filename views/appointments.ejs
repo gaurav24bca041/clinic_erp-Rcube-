@@ -128,7 +128,17 @@
                   <td><%= appointment?.doctor %></td>
                   <td><%= appointment?.address %></td>
                   <td><%= appointment?.phone %></td>
-                  <td><%= appointment?.status %></td>
+                  <!-- ✅ Status Dropdown -->
+                  <td>
+                    <form action="/appointments/update-status/<%= appointment._id %>" method="POST">
+                      <select name="status" onchange="this.form.submit()" style="padding:5px; border-radius:6px; border:1px solid #ccc;">
+                        <option value="Pending" <%= appointment.status === "Pending" ? "selected" : "" %>>Pending</option>
+                        <option value="Confirmed" <%= appointment.status === "Confirmed" ? "selected" : "" %>>Confirmed</option>
+                        <option value="Completed" <%= appointment.status === "Completed" ? "selected" : "" %>>Completed</option>
+                        <option value="Cancelled" <%= appointment.status === "Cancelled" ? "selected" : "" %>>Cancelled</option>
+                      </select>
+                    </form>
+                  </td>
                   <td><%= appointment?.date?.toLocaleDateString() %></td>
                   <td><%= appointment?.time %></td>
                   <td>
@@ -140,7 +150,6 @@
                       <button type="submit" class="btn-small success">➕ Add</button>
                     </form>
                     <a href="/appointments/reschedule/<%= appointment._id %>" class="btn-small warning">📅 Reschedule</a>
-                    <!-- ✅ Re-Appointment Button -->
                     <a href="/appointments/re-appointment/<%= appointment._id %>" class="btn-small info">🔁 Re-Appointment</a>
                   </td>
                 </tr>

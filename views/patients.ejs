@@ -57,6 +57,36 @@
       .main { padding: 15px; }
       table { display: block; overflow-x: auto; white-space: nowrap; }
     }
+    /* Edit & Delete buttons in table */
+    .btn-small.edit {
+      background: #504735; /* orange */
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn-small.edit:hover {
+      background: #755f45;
+    }
+
+    .btn-small.delete {
+      background: #831c10; /* red */
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn-small.delete:hover {
+      background: #c0392b;
+    }
+
+    /* Optional: align actions nicely */
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
   </style>
 </head>
 <body>
@@ -135,12 +165,13 @@
                     <% } %>
                   </td>
 
-                  <td>
-                    <a href="/patients/edit/<%= patient._id %>" class="btn-small">✏️ Edit</a>
+                  <td class="actions">
+                    <a href="/patients/edit/<%= patient._id %>" class="btn-small edit">✏️ Edit</a>
                     <form action="/patients/delete/<%= patient._id %>" method="POST" style="display:inline;">
-                      <button type="submit" class="btn-small danger" onclick="return confirm('Are you sure you want to delete this patient?')">🗑 Delete</button>
+                      <button type="submit" class="btn-small delete" onclick="return confirm('Are you sure you want to delete this patient?')">🗑 Delete</button>
                     </form>
                   </td>
+
                 </tr>
               <% }) %>
             <% } else { %>
