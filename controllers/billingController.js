@@ -1,6 +1,8 @@
 // controllers/billingController.js
 const Invoice = require('../models/invoices');
 const Setting = require('../models/setting');
+const Patient = require('../models/patients');   // ✅ Patients model import
+const Doctor = require('../models/doctor');     // ✅ Doctor model import
 
 // --- Billing Dashboard ---
 exports.getBilling = async (req, res) => {
@@ -46,8 +48,19 @@ exports.payInvoice = async (req, res) => {
 };
 
 // --- Generate Invoice Form ---
-exports.getGenerateInvoice = (req, res) => {
-  res.render('generate-invoice');
+exports.getGenerateInvoice = async (req, res) => {
+  try {
+    if (!req.session.userId) return res.redirect('/');
+
+    // ✅ Fetch patients & doctors for dropdowns
+    const patients = await Patient.find({ userId: req.session.userId });
+    const doctors = await Doctor.find({ userId: req.session.userId });
+
+    res.render('generate-invoice', { patients, doctors });
+  } catch (err) {
+    console.error("Error loading invoice form:", err);
+    res.send('Error loading invoice form: ' + err);
+  }
 };
 
 // --- Save New Invoice ---
@@ -73,6 +86,7 @@ exports.postGenerateInvoice = async (req, res) => {
     res.send('Error saving invoice: ' + err);
   }
 };
+
 // --- Load Edit Invoice Form ---
 exports.getEditInvoice = async (req, res) => {
   try {
@@ -81,7 +95,11 @@ exports.getEditInvoice = async (req, res) => {
     const invoice = await Invoice.findOne({ _id: req.params.id, userId: req.session.userId });
     if (!invoice) return res.status(404).send('Invoice not found');
 
-    res.render('edit-invoice', { invoice });
+    // ✅ Pass patients & doctors for dropdowns in edit form also
+    const patients = await Patient.find({ userId: req.session.userId });
+    const doctors = await Doctor.find({ userId: req.session.userId });
+
+    res.render('edit-invoice', { invoice, patients, doctors });
   } catch (err) {
     console.error("Error loading invoice for edit:", err);
     res.send('Error loading invoice for edit: ' + err);
@@ -126,4 +144,3 @@ exports.deleteInvoice = async (req, res) => {
     res.send('Error deleting invoice: ' + err);
   }
 };
-

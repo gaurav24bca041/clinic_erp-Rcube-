@@ -1,12 +1,27 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Generate Invoice - Clinic ERP</title>
   <link rel="stylesheet" href="/stylesheet/styles.css?v=2">
+  <style>
+    body, html { font-family: 'Segoe UI', sans-serif; margin:0; background:#f4f6f9; }
+    .container { display:flex; min-height:100vh; }
+    .sidebar { width:240px; background:linear-gradient(180deg, #1b4965, #247ba0); color:#fff; padding:25px 20px; }
+    .sidebar h2 { margin-bottom:40px; text-align:center; }
+    .sidebar nav a { display:block; color:#e0f7fa; text-decoration:none; margin-bottom:18px; padding:12px 15px; border-radius:8px; }
+    .sidebar nav a.active, .sidebar nav a:hover { background:rgba(255,255,255,0.2); color:#fff; }
+    .main { flex:1; padding:25px; }
+    .content { background:#fff; padding:25px; border-radius:15px; box-shadow:0 4px 12px rgba(0,0,0,0.08); max-width:600px; margin:auto; }
+    label { display:block; margin:12px 0 6px; font-weight:500; }
+    input, select { width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; }
+    .btn { background:#2f80ed; color:#fff; border:none; border-radius:8px; cursor:pointer; padding:12px 18px; margin-top:20px; width:100%; }
+    .btn:hover { background:#1f5bb5; }
+  </style>
 </head>
 <body>
   <div class="container">
+    <!-- Sidebar -->
     <aside class="sidebar">
       <h2>🩺 Clinic ERP</h2>
       <nav>
@@ -20,6 +35,7 @@
       </nav>
     </aside>
 
+    <!-- Main -->
     <main class="main">
       <header class="topbar">
         <h1>Generate Invoice</h1>
@@ -27,27 +43,42 @@
 
       <section class="content">
         <form class="form" action="/billing/generate-invoice" method="post">
-            <label>Patient Name</label>
-            <input type="text" name="patientName" required />
 
-            <label>Services</label>
-            <input type="text" name="services" placeholder="e.g., Consultation, X-ray" required />
+          <!-- Patient Dropdown + Typing -->
+          <label for="patient">Patient Name</label>
+          <input list="patients" name="patientName" id="patient" placeholder="Select or type patient name" required>
+          <datalist id="patients">
+            <% patients.forEach(patient => { %>
+              <option value="<%= patient.name %>"></option>
+            <% }) %>
+          </datalist>
 
-            <label>Amount (₹)</label>
-            <input type="number" name="amount" required />
+          <!-- Services Dropdown + Typing -->
+          <label for="services">Services</label>
+          <input list="servicesList" name="services" id="services" placeholder="Select or type service" required>
+          <datalist id="servicesList">
+            <% doctors.forEach(doctor => { %>
+              <option value="<%= doctor.specialization %>"></option>
+            <% }) %>
+          </datalist>
 
-            <label>Status</label>
-            <select name="status">
-                <option>Paid</option>
-                <option>Unpaid</option>
-            </select>
+          <!-- Amount -->
+          <label>Amount (₹)</label>
+          <input type="number" name="amount" required />
 
-            <label>Invoice Date</label>
-            <input type="date" name="date" value="2025-07-04" />
+          <!-- Status -->
+          <label>Status</label>
+          <select name="status">
+            <option>Paid</option>
+            <option selected>Unpaid</option>
+          </select>
 
-            <button type="submit" class="btn">Generate Invoice</button>
+          <!-- Invoice Date -->
+          <label>Invoice Date</label>
+          <input type="date" name="date" value="<%= new Date().toISOString().split('T')[0] %>" />
+
+          <button type="submit" class="btn">Generate Invoice</button>
         </form>
-
       </section>
     </main>
   </div>
