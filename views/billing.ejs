@@ -115,7 +115,7 @@
                 </td>
                 <td><%= invoice.services %></td>
                 <td>
-                  <!-- ✅ Print Invoice Button -->
+                  <!-- Print Invoice Button -->
                   <button class="btn-small" onclick="printInvoice('<%= invoice._id.toString().slice(-5).toUpperCase() %>', '<%= invoice.patientName %>', '<%= invoice.amount %>', '<%= invoice.date.toDateString() %>', '<%= invoice.status %>', '<%= invoice.services %>')">
                     🖨 Print
                   </button>
@@ -127,53 +127,51 @@
       </section>
     </main>
   </div>
+<script>
+  function printInvoice(id, patient, amount, date, status, services) {
+    const clinicName = "<%= clinicName %>";
+    const clinicAddress = "<%= clinicAddress %>";
+    const clinicPhone = "<%= clinicPhone %>";
+    const clinicEmail = "<%= clinicEmail %>";
 
-  <script>
-    // Mobile sidebar toggle
-    const menuBtn = document.querySelector('.menu-btn');
-    const sidebar = document.querySelector('.sidebar');
-    menuBtn.addEventListener('click', () => {
-      sidebar.style.display = sidebar.style.display === 'block' ? 'none' : 'block';
-    });
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Invoice - ${id}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            h2 { text-align: center; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            td, th { border: 1px solid #333; padding: 10px; text-align: left; }
+            .header { text-align: center; margin-bottom: 20px; }
+            .header h2 { margin: 5px; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h2>🩺 ${clinicName}</h2>
+            <p>${clinicAddress}<br>Phone: ${clinicPhone}<br>Email: ${clinicEmail}</p>
+          </div>
+          <hr>
+          <p><strong>Invoice ID:</strong> ${id}</p>
+          <p><strong>Patient:</strong> ${patient}</p>
+          <p><strong>Date:</strong> ${date}</p>
+          <p><strong>Status:</strong> ${status}</p>
+          <table>
+            <tr><th>Service</th><th>Amount</th></tr>
+            <tr><td>${services}</td><td>₹${amount}</td></tr>
+          </table>
+          <h3 style="text-align:right; margin-top:20px;">Total: ₹${amount}</h3>
+          <p style="margin-top:40px; text-align:center;">Thank you for visiting! 💙</p>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+  }
+</script>
 
-    // ✅ Print Invoice Function
-    function printInvoice(id, patient, amount, date, status, services) {
-      const printWindow = window.open('', '', 'height=600,width=800');
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>Invoice - ${id}</title>
-            <style>
-              body { font-family: Arial, sans-serif; padding: 20px; }
-              h2 { text-align: center; }
-              table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-              td, th { border: 1px solid #333; padding: 10px; text-align: left; }
-              .header { text-align: center; margin-bottom: 20px; }
-              .header h2 { margin: 5px; }
-            </style>
-          </head>
-          <body>
-            <div class="header">
-              <h2>🩺 Clinic ERP</h2>
-              <p>123 Main Street, City, State<br>Phone: +91-9876543210</p>
-            </div>
-            <hr>
-            <p><strong>Invoice ID:</strong> ${id}</p>
-            <p><strong>Patient:</strong> ${patient}</p>
-            <p><strong>Date:</strong> ${date}</p>
-            <p><strong>Status:</strong> ${status}</p>
-            <table>
-              <tr><th>Service</th><th>Amount</th></tr>
-              <tr><td>${services}</td><td>₹${amount}</td></tr>
-            </table>
-            <h3 style="text-align:right; margin-top:20px;">Total: ₹${amount}</h3>
-            <p style="margin-top:40px; text-align:center;">Thank you for visiting! 💙</p>
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.print();
-    }
-  </script>
+  
 </body>
 </html>
