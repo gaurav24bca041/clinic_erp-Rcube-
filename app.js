@@ -34,7 +34,7 @@ app.use("/settings", settingsRoutes);
 
 
 // Static file serving
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 const patientRoutes = require('./routes/patientRoutes');

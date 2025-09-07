@@ -1,21 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
+// const multer = require('multer');
 const path = require('path');
 const patientController = require('../controllers/patientController');
 const authMiddleware = require('../middleware/authMiddleware'); // login check
 
 // ------------------ Multer Config ------------------
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/patient_files'); // ✅ folder create करना होगा
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, 'uploads/patient_files'); // ✅ folder create करना होगा
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, Date.now() + '-' + file.originalname);
+//   }
+// });
 
-const upload = multer({ storage: storage });
+// const upload = multer({ storage: storage });
 
 // ------------------ Routes ------------------
 
@@ -34,11 +34,11 @@ router.post('/patients/edit/:id', authMiddleware, patientController.postEditPati
 router.post('/patients/delete/:id', authMiddleware, patientController.postDeletePatient);
 
 // Upload Files
-router.post(
-  '/patients/upload/:id',
-  authMiddleware,
-  upload.array('files', 10),  // ✅ multiple files (max 10)
-  patientController.postUploadFiles
-);
+// router.post(
+//   '/patients/upload/:id',
+//   authMiddleware,
+//   upload.array('files', 10),  // ✅ multiple files (max 10)
+//   patientController.postUploadFiles
+// );
 
 module.exports = router;
